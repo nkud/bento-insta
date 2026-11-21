@@ -1,4 +1,13 @@
-"""下書き Issue へのコメント（/post /redo /skip）を処理する。approve.yml から呼ばれる。"""
+"""下書き Issue へのコメントを処理する。approve.yml から呼ばれる。
+
+ふつうの言葉で書けば Claude が意図を読み取って動く:
+  「いいね、出して」              → 今すぐ投稿
+  「今夜8時に」「明日の朝7時半」    → 予約
+  「最後の一文いらない」「#唐揚げを足して」→ キャプションを直す（直して予約、も一度にできる）
+  「エビじゃなくてホタテ、作り直して」「文字を太く」→ 画像から作り直す
+  「これはやめとく」              → 見送り
+従来の /post /post 19:30 /redo /skip もそのまま使える。
+"""
 from __future__ import annotations
 
 import datetime as dt
@@ -12,7 +21,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import github_api as gh  # noqa: E402
 import post  # noqa: E402
 import strategy as strat  # noqa: E402
-from common import POSTS_FILE, env, load_config, load_json, now_jst, save_json  # noqa: E402
+from common import JST, POSTS_FILE, env, load_config, load_json, now_jst, save_json  # noqa: E402
 
 
 def parse_time(arg: str) -> dt.datetime | None:
@@ -33,14 +42,95 @@ def parse_time(arg: str) -> dt.datetime | None:
     return t
 
 
+# ------------------------------------------------------------------ ことばの解釈
+TOOL = {
+    "name": "decide",
+    "description": "コメントの意図を読み取り、下書きに対してやることを決める",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "action": {"type": "string",
+                       "enum": ["post_now", "schedule", "redo", "skip", "caption_only", "none"],
+                       "description": "post_now=今すぐ投稿 / schedule=時刻を決めて予約 / redo=画像とキャプションを作り直す / "
+                                      "skip=投稿しない / caption_only=キャプションを直すだけ / none=指示ではない・意図が曖昧"},
+            "new_caption": {"type": "string",
+                            "description": "キャプションを直す指示があるときだけ、直した後のキャプション全文。"
+                                           "指示された所以外は一字一句変えない。ハッシュタグは5個まで"},
+            "schedule_at": {"type": "string", "description": "schedule のとき。JST の日時 'YYYY-MM-DD HH:MM'。過去にしない"},
+            "redo_memo": {"type": "string", "description": "redo のとき、作り直しに反映するメモ（おかず名の訂正、エピソードなど）"},
+            "pen": {"type": "string", "enum": ["", "marker", "thin"], "description": "redo で文字の太さの指示があれば"},
+            "title_style": {"type": "string", "enum": ["", "kakko", "plain", "date"],
+                            "description": "redo でタイトルの書き方の指示があれば（kakko=＼〇〇弁当／, plain=〇〇弁当, date=日付つき）"},
+            "reply": {"type": "string", "description": "コメントした人への短い返事（日本語、1〜2文、です・ます調）。"
+                                                       "none のときは、どう書けば動くかを一言添えて聞き返す"},
+        },
+        "required": ["action", "reply"],
+    },
+}
+
+PROMPT = """お弁当の Instagram 投稿の「下書き」に、家族がコメントしました。コメントの意図を読み取って、やることを決めてください。
+
+# いまの日時（JST）
+{now}
+
+# 下書きの状態
+お弁当名: {title}
+状態: {status}{scheduled}
+おかず: {dishes}
+
+# いまのキャプション
+{caption}
+
+# コメント
+{comment}
+
+# 判断のしかた
+- 「OK」「いいね、出して」「投稿して」など、承認や投稿の意思 → post_now
+- 時刻や「今夜」「明日の朝」など、投稿のタイミングの指定 → schedule（「今夜」は20:00、「明日の朝」は7:30、「お昼」は12:00 を目安）
+- キャプションの言い回し・ハッシュタグ・一文の追加削除 → new_caption を作る。投稿や予約の指示も一緒なら action はそちら、無ければ caption_only
+- おかず名の間違い、写真の解析し直し、手書き画像の作り直し、文字の太さやタイトルの書き方の変更 → redo
+- 「やめる」「出さない」「ボツ」→ skip
+- 感想や質問など、操作の指示ではない／どちらとも取れる → none（推測で投稿しない）"""
+
+
+def interpret(text: str, rec: dict, current_caption: str, cfg: dict) -> dict:
+    from llm import call_tool
+    a = rec.get("analysis") or {}
+    return call_tool(cfg["claude"]["model"], TOOL, PROMPT.format(
+        now=now_jst().strftime("%Y-%m-%d %H:%M（%a）"),
+        title=rec.get("title", ""),
+        status={"draft": "確認待ち", "scheduled": "予約済み"}.get(rec.get("status"), rec.get("status")),
+        scheduled=f"（{dt.datetime.fromisoformat(rec['scheduled_at']):%m/%d %H:%M}）" if rec.get("scheduled_at") else "",
+        dishes="、".join(d.get("name", "") for d in a.get("dishes", [])),
+        caption=current_caption,
+        comment=text,
+    ), max_tokens=2500)
+
+
+def slash(text: str) -> dict | None:
+    """従来の /post /redo /skip を同じ形に変換する（Claude を呼ばない近道）。"""
+    m = re.match(r"^/(post|redo|skip)\b\s*(.*)$", text, re.S)
+    if not m:
+        return None
+    cmd, arg = m.group(1), m.group(2).strip()
+    if cmd == "skip":
+        return {"action": "skip"}
+    if cmd == "redo":
+        return {"action": "redo", "redo_memo": arg}
+    if not arg:
+        return {"action": "post_now"}
+    t = parse_time(arg)
+    if not t:
+        return {"action": "none", "reply": f"時刻が読み取れませんでした: `{arg}`（例: 19:30、明日 8:00）"}
+    return {"action": "schedule", "schedule_at": t.strftime("%Y-%m-%d %H:%M")}
+
+
+# ------------------------------------------------------------------ 実行
 def main():
     number = int(env("ISSUE_NUMBER", required=True))
     text = unicodedata.normalize("NFKC", env("COMMENT_BODY", "")).strip()
-    m = re.match(r"^/(post|redo|skip)\b\s*(.*)$", text, re.S)
-    if not m:
-        print("コマンドではないコメントなので何もしません")
+    if not text:
         return
-    cmd, arg = m.group(1), m.group(2).strip()
 
     cfg = load_config()
     posts = load_json(POSTS_FILE, [])
@@ -52,38 +142,65 @@ def main():
         gh.comment(number, f"これはもう投稿済みです: {rec.get('permalink')}")
         return
 
+    issue = gh.get_issue(number)
+    body = issue.get("body", "")
+    current = post.parse_caption(body) or rec.get("caption", "")
+    decision = slash(text) or interpret(text, rec, current, cfg)
+    action = decision.get("action", "none")
+    reply = (decision.get("reply") or "").strip()
+    print(f"判断: {decision}")
+
     try:
-        if cmd == "skip":
+        # キャプションの修正（投稿・予約と同時でもよい）
+        new_cap = (decision.get("new_caption") or "").strip()
+        if new_cap and new_cap != current.strip() and action != "redo":
+            body = post.replace_caption(body, new_cap)
+            gh.update_issue(number, body=body)
+
+        if action == "skip":
             rec.update({"status": "skipped", "scheduled_at": None})
-            gh.comment(number, "🙅 この写真は投稿しないことにしました")
+            gh.comment(number, f"🙅 {reply or 'この写真は投稿しないことにしました。'}")
             gh.set_labels(number, ["見送り"])
             gh.update_issue(number, state="closed")
 
-        elif cmd == "post" and not arg:
-            post.publish(rec, cfg)
+        elif action == "post_now":
+            post.publish(rec, cfg)     # 投稿完了のコメントとリンクは publish が書く
 
-        elif cmd == "post":
-            t = parse_time(arg)
-            if not t:
-                gh.comment(number, f"⚠️ 時刻が読み取れませんでした: `{arg}`（例: `/post 19:30`、`/post 明日 8:00`）")
+        elif action == "schedule":
+            try:
+                t = dt.datetime.strptime(decision.get("schedule_at", ""), "%Y-%m-%d %H:%M").replace(tzinfo=JST)
+            except ValueError:
+                t = None
+            if not t or t <= now_jst():
+                gh.comment(number, "⚠️ 予約の時刻が読み取れませんでした。「今夜8時に」「明日 7:30」のように書いてください。")
                 return
             rec.update({"status": "scheduled", "scheduled_at": t.isoformat()})
-            gh.comment(number, f"⏰ **{t:%m/%d %H:%M}** に投稿を予約しました（チェックは15分おきなので、最大15分ほど後になります）。\n"
-                               "それまでにキャプションを編集すれば、編集後の内容で投稿されます。取り消しは `/skip`、すぐ出すなら `/post`。")
+            msg = f"⏰ **{t:%m/%d %H:%M}** に投稿を予約しました。"
+            if new_cap:
+                msg += "キャプションも直しておきました。"
+            gh.comment(number, msg + "\nそれまでに直したいことがあれば、またコメントしてください。")
             gh.set_labels(number, [post.SCHEDULED_LABEL])
 
-        elif cmd == "redo":
+        elif action == "redo":
             import drive
             folder = env("DRIVE_FOLDER_ID") or cfg["drive"]["folder_id"]
-            post.build_draft(drive.service(), folder, rec, cfg, strat.load(), extra_memo=arg)
+            override = {k: decision.get(k) for k in ("pen", "title_style") if decision.get(k)}
+            post.build_draft(drive.service(), folder, rec, cfg, strat.load(),
+                             extra_memo=decision.get("redo_memo", ""), variant_override=override)
             rec.update({"status": "draft", "scheduled_at": None})
             gh.update_issue(number, title=f"🍱 下書き：{rec['title']}", body=post.issue_body(rec, strat.load()))
             gh.set_labels(number, [post.DRAFT_LABEL])
-            gh.comment(number, "🔁 作り直しました。上の画像とキャプションを確認してください")
+            gh.comment(number, f"🔁 {reply or '作り直しました。'}\n上の画像とキャプションを確認してください。")
+
+        elif action == "caption_only":
+            gh.comment(number, f"✏️ {reply or 'キャプションを直しました。'}\n上の枠が新しいキャプションです。よければ「出して」や時刻をコメントしてください。")
+
+        else:
+            gh.comment(number, f"💬 {reply or 'どうしましょう？「出して」「今夜8時に」「作り直して」「やめる」のように書いてもらえれば動きます。'}")
     except Exception as e:  # noqa: BLE001
         traceback.print_exc()
         rec["error"] = str(e)[:500]
-        gh.comment(number, f"⚠️ `/{cmd}` に失敗しました。\n```\n{e}\n```")
+        gh.comment(number, f"⚠️ うまくいきませんでした。もう一度コメントしてみてください。\n```\n{e}\n```")
         raise
     finally:
         save_json(POSTS_FILE, posts)

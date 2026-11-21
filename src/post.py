@@ -60,7 +60,8 @@ def to_jpeg(img: Image.Image, q: int) -> bytes:
     return buf.getvalue()
 
 
-def make_post(img: Image.Image, note: str, cfg: dict, strategy: dict, seed: int) -> dict:
+def make_post(img: Image.Image, note: str, cfg: dict, strategy: dict, seed: int,
+              variant_override: dict | None = None) -> dict:
     """解析 → 切り出し・色補正 → 手書き風画像 → 作り置きメモ → キャプション。"""
     analysis = vision.analyze(img, note, cfg["claude"]["model"])
     if not analysis.get("is_bento", True):
@@ -74,6 +75,7 @@ def make_post(img: Image.Image, note: str, cfg: dict, strategy: dict, seed: int)
     dishes_px = [{**d, "px": to_px(d["x"], d["y"])[0], "py": to_px(d["x"], d["y"])[1]}
                  for d in analysis["dishes"]]
     variant = strat.choose_variant(cfg, strategy, random.Random(seed))
+    variant.update({k: v for k, v in (variant_override or {}).items() if v})
     drawn = annotate.render(photo, analysis["title"], dishes_px, (bx0, by0, bx1, by1),
                             variant, date=now_jst().date(), seed=seed)
     text = caption.build(analysis, note, variant, strategy, cfg)
@@ -109,13 +111,12 @@ def issue_body(rec: dict, strategy: dict) -> str:
 ```
 <!-- caption:end -->
 
-### 💬 コメントで操作
-| コメント | 動き |
-|---|---|
-| `/post` | 今すぐ投稿 |
-| `/post 19:30` | 時刻を指定して予約（`/post 明日 8:00` も可） |
-| `/redo` | 作り直し。`/redo 肉巻きは豚バラ、お隣さんからの差し入れ` のようにメモも足せる |
-| `/skip` | 投稿しない |
+### 💬 コメントで指示（ふつうの言葉でOK）
+- 「いいね、出して」→ 今すぐ投稿
+- 「今夜8時に」「明日の朝7時半に」→ 予約
+- 「最後の一文いらない」「#唐揚げ を足して」→ キャプションを直す（「直して8時に出して」も一度にできる）
+- 「エビじゃなくてホタテ」「文字を太くして作り直して」→ 画像から作り直す
+- 「これはやめとく」→ 投稿しない
 {hint}
 <sub>パターン: タイトル={v.get('title_style')} / フォント={v.get('font')} / コメント={v.get('caption_length')} / タグ数={v.get('hashtag_count')}</sub>
 <!-- drive_file_id: {rec['drive_file_id']} -->
@@ -127,7 +128,14 @@ def parse_caption(body: str) -> str | None:
     return m.group(1).strip() if m else None
 
 
-def build_draft(svc, folder: str, rec: dict, cfg: dict, strategy: dict, extra_memo: str = "") -> None:
+def replace_caption(body: str, caption: str) -> str:
+    """Issue 本文のキャプション枠だけを書き換える。"""
+    new = f"<!-- caption:start -->\n```text\n{caption.strip()}\n```\n<!-- caption:end -->"
+    return re.sub(r"<!-- caption:start -->.*?<!-- caption:end -->", lambda _: new, body, flags=re.S)
+
+
+def build_draft(svc, folder: str, rec: dict, cfg: dict, strategy: dict, extra_memo: str = "",
+                variant_override: dict | None = None) -> None:
     """Drive の写真から画像・キャプションを作り、公開 URL に置いて rec に書き込む。"""
     import drive
     import hosting
@@ -138,7 +146,7 @@ def build_draft(svc, folder: str, rec: dict, cfg: dict, strategy: dict, extra_me
     img = open_image(drive.download(svc, f["id"]))
     rec["attempts"] = rec.get("attempts", 0) + 1
     seed = zlib.crc32(f"{f['id']}-{rec['attempts']}".encode())
-    p = make_post(img, note, cfg, strategy, seed=seed)
+    p = make_post(img, note, cfg, strategy, seed=seed, variant_override=variant_override)
     stamp = now_jst().strftime("%Y%m%d-%H%M%S")
     urls = [hosting.upload(f"media/{stamp}-{f['id'][:8]}-{i}.jpg", b) for i, b in enumerate(p["images"], 1)]
     rec.update({"memo": note, "title": p["analysis"]["title"], "analysis": p["analysis"],
