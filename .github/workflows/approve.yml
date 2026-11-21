@@ -51,12 +51,18 @@ jobs:
           MEDIA_REPO: ${{ secrets.MEDIA_REPO }}
           MEDIA_REPO_TOKEN: ${{ secrets.MEDIA_REPO_TOKEN }}
 
+      - name: ダッシュボードを更新
+        if: always()
+        run: python src/dashboard.py
+        env:
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+
       - name: 記録をコミット
         if: always()
         run: |
           git config user.name "bento-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/
+          git add data/ docs/
           if ! git diff --cached --quiet; then
             git commit -m "approve: 記録を更新"
             git pull --rebase && git push

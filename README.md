@@ -53,7 +53,8 @@ Instagram にカルーセル投稿（2枚）
 - 毎週月曜に Claude がデータを読んで考察し、「キャプションのコツ」「伸びるタグ・使わないタグ」「伸びる時間帯」「次に作ると良さそうなお弁当」をまとめます。8件たまると、これらがキャプション生成と投稿時間帯に反映されます。
 - 主菜（肉・魚…）・色味（茶色・カラフル）・品数・曜日・時間帯ごとの比較もレポートに出ます。
 
-レポートは Actions の実行結果（Summary と Artifacts の `report`）、または GitHub Pages で `docs/report.html` を見られます。
+運用状況と分析は **ダッシュボード**（`docs/index.html`）にまとまっていて、投稿・承認・集計のたびに自動で更新されます。
+Settings → Pages で「Deploy from a branch → main / docs」を選ぶと https://nkud.github.io/bento-insta/ で見られます。
 
 ---
 
@@ -131,6 +132,7 @@ src/caption.py            キャプション生成（学習結果を反映）
 src/strategy.py           どのパターンで投稿するか選ぶ
 src/metrics.py            反応の集計
 src/analyze.py            分析・レポート・方針の更新
+src/dashboard.py          ダッシュボード（docs/index.html）の作成
 data/                     投稿記録・方針（Actions が自動更新）
 docs/report.html          レポート
 fonts/                    手書き風フォント よもぎ（OFL）。書き順データ KanjiVG（CC BY-SA 3.0, © Ulrich Apel）と Yusei Magic（OFL）は src/annotate.py の LETTERING を "strokes" にしたとき用

@@ -51,6 +51,12 @@ jobs:
           name: report
           path: docs/report.html
 
+      - name: ダッシュボードを更新
+        if: always()
+        run: python src/dashboard.py
+        env:
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+
       - name: コミット
         run: |
           git config user.name "bento-bot"
