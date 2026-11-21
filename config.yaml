@@ -1,0 +1,47 @@
+# ===== お弁当 Instagram 自動投稿 設定 =====
+# 秘密情報（トークン等）はここに書かず、GitHub の Secrets に入れてください。
+
+drive:
+  # 写真を入れる Google Drive フォルダの ID（URL の folders/ の後ろ）。
+  # Secrets の DRIVE_FOLDER_ID があればそちらが優先されます。
+  folder_id: ""
+
+posting:
+  max_posts_per_run: 1          # 1回の実行で投稿する最大枚数（連投を防ぐ）
+  min_interval_hours: 3         # 前回投稿からこの時間が経つまで次を投稿しない
+  allowed_hours_jst: [7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20, 21]
+  # 十分なデータが集まったら、分析で分かった「伸びる時間帯」を優先する
+  use_learned_hours: true
+  max_retries: 3                # 失敗した写真を何回まで再挑戦するか
+
+claude:
+  model: claude-sonnet-5-5
+
+instagram:
+  graph_version: v26.0
+
+image:
+  width: 1080
+  height: 1350                  # 4:5（フィードで一番大きく表示される縦長）
+  jpeg_quality: 92
+
+caption:
+  base_hashtags: ["#お弁当", "#今日のお弁当", "#弁当"]
+  # 自分らしい口調のヒント（自由に書き換えてOK）
+  voice: "やさしく、ちょっとくだけた口調。絵文字は1〜2個まで。"
+  signature: ""                 # 毎回最後に付けたい一言（空なら無し）
+
+# どの「上げ方」が伸びるかを試すための実験軸。
+# 各投稿でどれかが選ばれ、結果のいいね数などで勝ちパターンを学習します。
+experiment:
+  epsilon: 0.3                  # 30% は新しいパターンを試し、70% は勝ちパターンを使う
+  min_samples_per_arm: 3        # 各パターン最低この回数は試してから判断
+  dimensions:
+    title_style: [kakko, plain, date]       # ＼ 〇〇弁当 ／ / 〇〇弁当 / 11.21 〇〇弁当
+    font: [yomogi, klee, kurenaido]         # 手書き風フォント
+    caption_length: [short, long]           # コメントの長さ
+    hashtag_count: [8, 15, 25]              # ハッシュタグの数
+
+analysis:
+  mature_hours: 72              # 投稿からこの時間が経った投稿だけで評価する
+  min_posts_for_learning: 8     # これ未満ならレポートは出すが、方針は変えない

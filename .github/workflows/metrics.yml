@@ -1,0 +1,62 @@
+name: 反応を集計・分析
+
+on:
+  schedule:
+    - cron: "13 19 * * *"         # 毎日 4:13 JST に指標を集計（Claude の考察は月曜のみ）
+  workflow_dispatch:
+    inputs:
+      with_llm:
+        description: "Claude の考察も更新する"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bento-state
+  cancel-in-progress: false
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: いいね数などを取得
+        run: python src/metrics.py
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+
+      - name: 分析してレポートと方針を更新
+        run: |
+          if [ "${{ inputs.with_llm }}" = "true" ] || [ "$(TZ=Asia/Tokyo date +%u)" = "1" ]; then
+            python src/analyze.py
+          else
+            python src/analyze.py --no-llm
+          fi
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: レポートを保存
+        uses: actions/upload-artifact@v4
+        with:
+          name: report
+          path: docs/report.html
+
+      - name: コミット
+        run: |
+          git config user.name "bento-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ docs/
+          if ! git diff --cached --quiet; then
+            git commit -m "metrics: 反応を集計"
+            git pull --rebase && git push
+          fi
