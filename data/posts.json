@@ -98,7 +98,19 @@
       "#季節の食卓"
     ],
     "scheduled_at": null,
-    "followers_at_post": 0
+    "followers_at_post": 0,
+    "metrics": {
+      "likes": 0,
+      "comments": 0,
+      "saved": null,
+      "shares": null,
+      "reach": null,
+      "views": null,
+      "total_interactions": null,
+      "age_hours": 17.8,
+      "collected_at": "2026-11-22T08:48:13.506228+09:00"
+    },
+    "snapshots": {}
   },
   {
     "drive_file_id": "1wYcuUJGblFjgyPnXUhjVkFz6Ai-MlIjF",
