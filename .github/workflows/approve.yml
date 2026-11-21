@@ -1,7 +1,7 @@
 name: 下書きを承認・修正
 
 # 下書き Issue に /post /redo /skip とコメントすると動く。
-# 公開リポジトリなので、リポジトリの持ち主のコメントだけを受け付ける。
+# 公開リポジトリなので、持ち主とコラボレーター（Settings → Collaborators で招待した人）のコメントだけを受け付ける。
 
 on:
   issue_comment:
@@ -18,7 +18,7 @@ concurrency:
 jobs:
   approve:
     if: >-
-      github.event.comment.author_association == 'OWNER' &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
       (contains(github.event.issue.labels.*.name, '下書き') ||
        contains(github.event.issue.labels.*.name, '予約済み'))
     runs-on: ubuntu-latest
