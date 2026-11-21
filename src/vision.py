@@ -44,15 +44,30 @@ TOOL = {
             "box": {"type": "string", "description": "弁当箱の種類。例: 曲げわっぱ / 2段 / プラ容器"},
             "highlights": {"type": "array", "items": {"type": "string"},
                            "description": "キャプションに使える見どころ（彩り・半熟卵など）2〜4個"},
+            "prep": {
+                "type": "object",
+                "description": "3枚目の「作り置きメモ」用。共働きの家庭で無理なく作る段取りとして自然な振り分け",
+                "properties": {
+                    "night": {"type": "array", "items": {"type": "string"}, "description": "前の晩に作っておくおかず"},
+                    "morning": {"type": "array", "items": {"type": "string"}, "description": "朝に作る・焼く・詰めるだけのおかず"},
+                    "stock": {"type": "array", "description": "作り置きに向くおかず（0〜3品）",
+                              "items": {"type": "object", "properties": {
+                                  "name": {"type": "string"},
+                                  "keep": {"type": "string", "description": "日持ちの目安。控えめに。例: 冷蔵2日 / 冷凍2週間"}},
+                                  "required": ["name", "keep"]}},
+                    "tip": {"type": "string", "description": "時短や詰め方のコツを1〜2文（60文字以内）"},
+                },
+                "required": ["night", "morning", "stock", "tip"],
+            },
         },
-        "required": ["is_bento", "title", "bento_bbox", "dishes", "main", "tone", "box", "highlights"],
+        "required": ["is_bento", "title", "bento_bbox", "dishes", "main", "tone", "box", "highlights", "prep"],
     },
 }
 
 PROMPT = """この写真はお弁当の写真です。Instagram 投稿用に解析してください。
 - おかず名は家庭料理として自然な日本語で（推測でOK、迷ったら一般的な名前）。
 - x, y はそのおかずが写っている部分の中心を、画像全体に対する比率で正確に。
-- 投稿者のメモがあれば、おかず名やお弁当名はメモを優先してください。
+- 投稿者のメモがあれば、おかず名やお弁当名、作り置きの段取りはメモを優先してください。\n- prep の日持ちは家庭料理として安全側（短め）の目安にしてください。ご飯やおかずの全品をどれかに振り分ける必要はありません。
 投稿者のメモ: {memo}"""
 
 

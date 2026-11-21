@@ -31,6 +31,8 @@ from PIL import Image, ImageOps
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import annotate  # noqa: E402
 import caption  # noqa: E402
+import color  # noqa: E402
+import memo  # noqa: E402
 import strategy as strat  # noqa: E402
 import vision  # noqa: E402
 from common import OUT, POSTS_FILE, env, load_config, load_json, now_jst, save_json  # noqa: E402
@@ -58,13 +60,14 @@ def to_jpeg(img: Image.Image, q: int) -> bytes:
     return buf.getvalue()
 
 
-def make_post(img: Image.Image, memo: str, cfg: dict, strategy: dict, seed: int) -> dict:
-    """解析 → 切り出し → 手書き風画像 → キャプション。"""
-    analysis = vision.analyze(img, memo, cfg["claude"]["model"])
+def make_post(img: Image.Image, note: str, cfg: dict, strategy: dict, seed: int) -> dict:
+    """解析 → 切り出し・色補正 → 手書き風画像 → 作り置きメモ → キャプション。"""
+    analysis = vision.analyze(img, note, cfg["claude"]["model"])
     if not analysis.get("is_bento", True):
         raise ValueError("お弁当の写真ではないと判定されました")
     W, H = cfg["image"]["width"], cfg["image"]["height"]
     photo, to_px = annotate.crop_portrait(img, analysis["bento_bbox"], W, H)
+    photo = color.enhance(photo, cfg["image"].get("color"))
     b = analysis["bento_bbox"]
     bx0, by0 = to_px(b["x0"], b["y0"])
     bx1, by1 = to_px(b["x1"], b["y1"])
@@ -73,27 +76,30 @@ def make_post(img: Image.Image, memo: str, cfg: dict, strategy: dict, seed: int)
     variant = strat.choose_variant(cfg, strategy, random.Random(seed))
     drawn = annotate.render(photo, analysis["title"], dishes_px, (bx0, by0, bx1, by1),
                             variant, date=now_jst().date(), seed=seed)
-    text = caption.build(analysis, memo, variant, strategy, cfg)
+    text = caption.build(analysis, note, variant, strategy, cfg)
     q = cfg["image"]["jpeg_quality"]
-    return {"analysis": analysis, "variant": variant, "caption": text,
-            "img1": to_jpeg(photo, q), "img2": to_jpeg(drawn, q)}
+    images = [to_jpeg(photo, q), to_jpeg(drawn, q)]
+    if cfg["image"].get("memo_slide") and analysis.get("prep"):
+        images.append(to_jpeg(memo.render(photo, analysis["title"], analysis["prep"], (W, H), seed=seed), q))
+    return {"analysis": analysis, "variant": variant, "caption": text, "images": images}
 
 
 # ------------------------------------------------------------------ 下書き Issue
 def issue_body(rec: dict, strategy: dict) -> str:
-    u1, u2 = rec["image_urls"]
+    urls = rec["image_urls"]
+    heads = ["1枚目", "2枚目", "3枚目（作り置きメモ）"][: len(urls)]
     hint = ""
     hours = (strategy.get("insights") or {}).get("best_posting_hours") or []
     if strategy.get("learning_active") and hours:
         hint = f"\n> 📈 これまでのデータでは **{'・'.join(f'{h}時' for h in sorted(hours))}** ごろの投稿が伸びやすいです\n"
-    memo = f"\n**メモ:** {rec['memo']}\n" if rec.get("memo") else ""
+    memo_line = f"\n**メモ:** {rec['memo']}\n" if rec.get("memo") else ""
     v = rec.get("variant", {})
     return f"""## 🍱 {rec['title']}
 
-| 1枚目 | 2枚目 |
-|---|---|
-| <img src="{u1}" width="300"> | <img src="{u2}" width="300"> |
-{memo}
+| {" | ".join(heads)} |
+|{"---|" * len(urls)}
+| {" | ".join(f'<img src="{u}" width="260">' for u in urls)} |
+{memo_line}
 ### ✏️ キャプション
 下の枠の中を編集すると、そのまま投稿されます（右上の「…」→ Edit）。
 
@@ -126,18 +132,17 @@ def build_draft(svc, folder: str, rec: dict, cfg: dict, strategy: dict, extra_me
     import drive
     import hosting
     f = {"id": rec["drive_file_id"], "name": rec["drive_name"], "description": rec.get("drive_description")}
-    memo = drive.find_memo(svc, folder, f)
+    note = drive.find_memo(svc, folder, f)
     if extra_memo:
-        memo = (memo + "\n" + extra_memo).strip()
+        note = (note + "\n" + extra_memo).strip()
     img = open_image(drive.download(svc, f["id"]))
     rec["attempts"] = rec.get("attempts", 0) + 1
     seed = zlib.crc32(f"{f['id']}-{rec['attempts']}".encode())
-    p = make_post(img, memo, cfg, strategy, seed=seed)
+    p = make_post(img, note, cfg, strategy, seed=seed)
     stamp = now_jst().strftime("%Y%m%d-%H%M%S")
-    url1 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-1.jpg", p["img1"])
-    url2 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-2.jpg", p["img2"])
-    rec.update({"memo": memo, "title": p["analysis"]["title"], "analysis": p["analysis"],
-                "variant": p["variant"], "caption": p["caption"], "image_urls": [url1, url2], "error": None})
+    urls = [hosting.upload(f"media/{stamp}-{f['id'][:8]}-{i}.jpg", b) for i, b in enumerate(p["images"], 1)]
+    rec.update({"memo": note, "title": p["analysis"]["title"], "analysis": p["analysis"],
+                "variant": p["variant"], "caption": p["caption"], "image_urls": urls, "error": None})
 
 
 # ------------------------------------------------------------------ 投稿
@@ -228,8 +233,8 @@ def main():
         raw = pathlib.Path(args.local).read_bytes()
         p = make_post(open_image(raw), args.memo, cfg, strategy, seed=int(now_jst().timestamp()))
         OUT.mkdir(exist_ok=True)
-        (OUT / "local-1.jpg").write_bytes(p["img1"])
-        (OUT / "local-2.jpg").write_bytes(p["img2"])
+        for i, b in enumerate(p["images"], 1):
+            (OUT / f"local-{i}.jpg").write_bytes(b)
         (OUT / "local-caption.txt").write_text(p["caption"], encoding="utf-8")
         print(f"out/ に書き出しました\n---\n{p['caption']}\n---\nパターン: {p['variant']}")
         return

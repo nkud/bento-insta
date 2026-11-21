@@ -31,7 +31,7 @@ PROMPT = """あなたはお弁当アカウントの中の人です。下の情�
 # 書き方
 - 口調: {voice}
 - コメントの長さ: {length}
-- メモがあれば、その内容（エピソード）を必ず自然に入れる。メモに無い事実は作らない。
+- メモがあれば、その内容（エピソード）を必ず自然に入れる。メモに無い事実は作らない。\n{memo_slide}
 - ハッシュタグは必ず含めるタグを含めてちょうど {n_tags} 個（Instagram の上限は5個）。残りは今日のおかずや内容に合う具体的なタグにする。
 - 必ず含めるタグ: {base_tags}
 {learned}"""
@@ -76,6 +76,7 @@ def build(analysis: dict, memo: str, variant: dict, strategy: dict, cfg: dict) -
             n_tags=n_tags,
             base_tags=" ".join(base),
             learned=_learned_block(strategy),
+            memo_slide=("- 3枚目に作り置きの段取りメモの画像がある。保存したくなるよう、最後に『段取りは3枚目にメモしました』のような一言を自然に入れる。" if cfg["image"].get("memo_slide") else ""),
     ), max_tokens=1500)
 
     tags = []
