@@ -2,7 +2,7 @@ name: お弁当の下書きを作成・予約投稿
 
 on:
   schedule:
-    - cron: "*/15 * * * *"        # 15分ごと：予約時刻を過ぎた下書きの投稿 ＋ Drive の新しい写真から下書き作成
+    - cron: "17 * * * *"          # 予備：1時間ごと（ふだんは Apps Script が5分ごとに起動する）
   workflow_dispatch:
 
 permissions:

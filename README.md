@@ -111,6 +111,20 @@ python src/post.py --local 写真.jpg --memo "お隣さんから手羽元をも�
 # → out/ に画像2枚とキャプション
 ```
 
+## Apps Script で起動を安定させる
+
+GitHub の定期実行は遅れたり飛んだりするので、Google Apps Script のタイマーから起動します（`tools/apps-script/Code.gs`）。
+
+1. GitHub で Fine-grained トークンを作る：Settings → Developer settings → Fine-grained tokens → Generate new token
+   - Repository access: Only select repositories → `nkud/bento-insta`
+   - Permissions: **Actions: Read and write**
+2. https://script.google.com で新しいプロジェクトを作り、`Code.gs` の中身を貼り付けて保存
+3. 歯車（プロジェクトの設定）→ スクリプト プロパティに追加
+   - `GITHUB_TOKEN` … 1 のトークン
+   - `FOLDER_ID` … お弁当フォルダの ID
+4. 関数 `setup` を選んで実行 → 権限を許可（Drive の閲覧・外部への接続）
+5. 以後、5分ごとに新しい写真と予約を確認し、毎日4時に集計を起動します。`runNow` で手動起動もできます
+
 ## カスタマイズ
 
 - `config.yaml`
