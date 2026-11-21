@@ -17,9 +17,14 @@ from common import FONTS
 
 import handwriting
 
-FALLBACK_FONT = "YuseiMagic-Regular.ttf"   # 書き順データに無い文字だけこのフォントで
-# ペンの太さ（文字サイズに対する線の太さ）。実験軸 pen で切り替える
-PEN_WIDTH = {"marker": 0.095, "thin": 0.068}
+# 文字の書き方
+#   "font"    : 手書き風フォント（いまは よもぎ）で書く
+#   "strokes" : 書き順データ（KanjiVG）を1画ずつペンでなぞって書く
+LETTERING = "font"
+LETTER_FONT = "Yomogi-Regular.ttf"
+FALLBACK_FONT = "YuseiMagic-Regular.ttf"   # strokes のとき、書き順データに無い文字だけこのフォントで
+# ペンの太さ。実験軸 pen で切り替える（font: 輪郭を太らせるピクセル数 / strokes: 文字サイズに対する線の太さ）
+PEN_WIDTH = {"font": {"marker": 2, "thin": 1}, "strokes": {"marker": 0.095, "thin": 0.068}}
 # 縦書きのときに90度回す文字
 VERT_ROTATE = set("ーｰ〜～-—…（）()「」×")
 WHITE = (255, 255, 255, 255)
@@ -53,8 +58,11 @@ def crop_portrait(img: Image.Image, bbox: dict, W: int, H: int):
 
 
 # ---------------------------------------------------------------- text
-def _pen(variant: dict, size: int) -> "handwriting.Pen":
-    return handwriting.Pen(size, FALLBACK_FONT, PEN_WIDTH.get(variant.get("pen", "marker"), 0.095))
+def _pen(variant: dict, size: int):
+    w = PEN_WIDTH[LETTERING].get(variant.get("pen", "thin"), PEN_WIDTH[LETTERING]["thin"])
+    if LETTERING == "strokes":
+        return handwriting.Pen(size, FALLBACK_FONT, w)
+    return handwriting.FontPen(size, LETTER_FONT, round(w * size / 54))   # 小さい字は太らせすぎない
 
 
 def _wrap(text: str, n: int) -> list[str]:

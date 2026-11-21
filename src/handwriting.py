@@ -183,3 +183,27 @@ class Pen:
         if rot90:
             t = t.rotate(-90, resample=Image.BICUBIC, expand=True)
         return t
+
+
+class FontPen:
+    """手書き風フォントで1文字ずつ描くペン（Pen と同じ使い方）。stroke で線を少し太らせる。"""
+
+    def __init__(self, size: int, font_file: str, stroke: int = 1):
+        self.size = size
+        self.stroke = stroke
+        self.font = ImageFont.truetype(str(FONTS / font_file), size)
+
+    def advance(self, ch: str) -> float:
+        return self.font.getlength(ch)
+
+    def length(self, text: str) -> float:
+        return sum(self.advance(c) for c in text)
+
+    def tile(self, ch: str, fill, rng, rot90: bool = False) -> Image.Image:
+        pad = int(self.size * 0.4)
+        adv = self.font.getlength(ch)
+        t = Image.new("RGBA", (int(max(adv, self.size)) + pad * 2, int(self.size * 1.3) + pad * 2), (0, 0, 0, 0))
+        ImageDraw.Draw(t).text((pad + (max(adv, self.size) - adv) / 2, pad), ch, font=self.font, fill=fill,
+                               stroke_width=self.stroke, stroke_fill=fill)
+        t = t.rotate(rng.uniform(-5, 5) + (-90 if rot90 else 0), resample=Image.BICUBIC, expand=True)
+        return t

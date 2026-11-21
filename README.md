@@ -133,7 +133,7 @@ src/metrics.py            反応の集計
 src/analyze.py            分析・レポート・方針の更新
 data/                     投稿記録・方針（Actions が自動更新）
 docs/report.html          レポート
-fonts/                    書き順データ KanjiVG（CC BY-SA 3.0, © Ulrich Apel）と予備フォント Yusei Magic（OFL）
+fonts/                    手書き風フォント よもぎ（OFL）。書き順データ KanjiVG（CC BY-SA 3.0, © Ulrich Apel）と Yusei Magic（OFL）は src/annotate.py の LETTERING を "strokes" にしたとき用
 .github/workflows/        定期実行
 ```
 
