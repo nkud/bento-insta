@@ -110,7 +110,7 @@ TOOL = {
 
 
 def llm_insights(views, groups, tags, model) -> dict:
-    import anthropic
+    from llm import call_tool
     top = sorted(views, key=lambda v: -v["score"])[:3]
     bottom = sorted(views, key=lambda v: v["score"])[:3]
     brief = lambda v: {"title": v["title"], "score": v["score"], "likes": v["likes"], "saved": v["saved"],
@@ -122,10 +122,7 @@ def llm_insights(views, groups, tags, model) -> dict:
               "件数(n)が少ないグループの差は偶然の可能性が高いので、断定せず慎重に扱ってください。"
               "数字の根拠を示しながら、次の投稿で何を変えるとよいか具体的にまとめてください。\n\n"
               + json.dumps(payload, ensure_ascii=False, default=str))
-    res = anthropic.Anthropic().messages.create(
-        model=model, max_tokens=3000, tools=[TOOL], tool_choice={"type": "tool", "name": "report_insights"},
-        messages=[{"role": "user", "content": prompt}])
-    return next(b.input for b in res.content if b.type == "tool_use")
+    return call_tool(model, TOOL, prompt, max_tokens=3000)
 
 
 # ------------------------------------------------------------------ レポート

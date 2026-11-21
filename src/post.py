@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import io
+import json
 import pathlib
 import random
 import sys
@@ -113,6 +114,10 @@ def main():
             if f["id"] not in by_id
             or (by_id[f["id"]].get("status") == "failed" and by_id[f["id"]].get("attempts", 0) < max_retry)]
     print(f"未投稿の写真: {len(todo)} 枚")
+    if not todo:
+        sa = json.loads(env("GOOGLE_SERVICE_ACCOUNT_JSON"))["client_email"]
+        print(f"※ 写真が見つかりません。Drive フォルダ（ID: {folder}）が {sa} に共有されているか確認してください")
+    failed = 0
 
     for f in todo[: cfg["posting"]["max_posts_per_run"]]:
         rec = by_id.get(f["id"]) or {"drive_file_id": f["id"], "drive_name": f["name"],
@@ -151,8 +156,13 @@ def main():
         except Exception as e:  # noqa: BLE001
             traceback.print_exc()
             rec.update({"status": "failed", "error": str(e)[:500]})
+            failed += 1
+            if dry and is_new and rec in posts:
+                posts.remove(rec)        # ドライランの失敗は記録しない
         finally:
             save_json(POSTS_FILE, posts)   # 1枚ごとに保存して二重投稿を防ぐ
+    if failed:
+        sys.exit(f"{failed} 枚の処理に失敗しました（上のエラーを確認）")
 
 
 def _write_out(name: str, p: dict):

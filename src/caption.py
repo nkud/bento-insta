@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 
-import anthropic
+from llm import call_tool
 
 TOOL = {
     "name": "write_caption",
@@ -65,13 +65,7 @@ def build(analysis: dict, memo: str, variant: dict, strategy: dict, cfg: dict) -
     cap = cfg["caption"]
     n_tags = int(variant.get("hashtag_count", 15))
     base = [_norm_tag(t) for t in cap["base_hashtags"]]
-    client = anthropic.Anthropic()
-    res = client.messages.create(
-        model=cfg["claude"]["model"],
-        max_tokens=1500,
-        tools=[TOOL],
-        tool_choice={"type": "tool", "name": "write_caption"},
-        messages=[{"role": "user", "content": PROMPT.format(
+    out = call_tool(cfg["claude"]["model"], TOOL, PROMPT.format(
             title=analysis["title"],
             dishes="、".join(d["name"] for d in analysis["dishes"]),
             box=analysis.get("box", ""),
@@ -82,9 +76,7 @@ def build(analysis: dict, memo: str, variant: dict, strategy: dict, cfg: dict) -
             n_tags=n_tags,
             base_tags=" ".join(base),
             learned=_learned_block(strategy),
-        )}],
-    )
-    out = next(b.input for b in res.content if b.type == "tool_use")
+    ), max_tokens=1500)
 
     tags = []
     for t in base + [_norm_tag(t) for t in out["hashtags"]]:

@@ -1,10 +1,1 @@
-[
-  {
-    "drive_file_id": "1DNYRY302SDWIktdzb9N4DGR0vJAADFfF",
-    "drive_name": "PXL_20261119_040907000.jpg",
-    "drive_created": "2026-11-21T05:05:50.883Z",
-    "attempts": 1,
-    "status": "failed",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011ChFVXXpcFnwY3YTXyrZA3'}"
-  }
-]
+[]

@@ -4,8 +4,9 @@ from __future__ import annotations
 import base64
 import io
 
-import anthropic
 from PIL import Image
+
+from llm import call_tool
 
 TOOL = {
     "name": "report_bento",
@@ -64,22 +65,10 @@ def _to_jpeg_b64(img: Image.Image, max_side: int = 1568) -> str:
 
 
 def analyze(img: Image.Image, memo: str, model: str) -> dict:
-    client = anthropic.Anthropic()
-    res = client.messages.create(
-        model=model,
-        max_tokens=2000,
-        tools=[TOOL],
-        tool_choice={"type": "tool", "name": "report_bento"},
-        messages=[{
-            "role": "user",
-            "content": [
-                {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg",
-                                             "data": _to_jpeg_b64(img)}},
-                {"type": "text", "text": PROMPT.format(memo=memo or "（なし）")},
-            ],
-        }],
-    )
-    data = next(b.input for b in res.content if b.type == "tool_use")
+    data = call_tool(model, TOOL, [
+        {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": _to_jpeg_b64(img)}},
+        {"type": "text", "text": PROMPT.format(memo=memo or "（なし）")},
+    ], max_tokens=2000)
     # 値の範囲を安全側に丸める
     for d in data["dishes"]:
         d["x"] = min(max(float(d["x"]), 0.0), 1.0)
