@@ -32,7 +32,7 @@ PROMPT = """あなたはお弁当アカウントの中の人です。下の情�
 - 口調: {voice}
 - コメントの長さ: {length}
 - メモがあれば、その内容（エピソード）を必ず自然に入れる。メモに無い事実は作らない。
-- ハッシュタグはちょうど {n_tags} 個。おかず名・弁当箱・季節・お弁当系の定番を混ぜる。
+- ハッシュタグは必ず含めるタグを含めてちょうど {n_tags} 個（Instagram の上限は5個）。残りは今日のおかずや内容に合う具体的なタグにする。
 - 必ず含めるタグ: {base_tags}
 {learned}"""
 
@@ -63,7 +63,7 @@ def _norm_tag(t: str) -> str:
 
 def build(analysis: dict, memo: str, variant: dict, strategy: dict, cfg: dict) -> str:
     cap = cfg["caption"]
-    n_tags = int(variant.get("hashtag_count", 15))
+    n_tags = min(int(variant.get("hashtag_count", 5)), 5)
     base = [_norm_tag(t) for t in cap["base_hashtags"]]
     out = call_tool(cfg["claude"]["model"], TOOL, PROMPT.format(
             title=analysis["title"],
@@ -82,7 +82,7 @@ def build(analysis: dict, memo: str, variant: dict, strategy: dict, cfg: dict) -
     for t in base + [_norm_tag(t) for t in out["hashtags"]]:
         if t not in tags and len(t) > 1:
             tags.append(t)
-    tags = tags[:min(max(n_tags, len(base)), 30)]   # Instagram は最大30個
+    tags = tags[:min(max(n_tags, len(base)), 5)]   # Instagram は1投稿5個まで
 
     lines = [analysis["title"]]
     lines += [f"☆{d['name']}" for d in analysis["dishes"]]

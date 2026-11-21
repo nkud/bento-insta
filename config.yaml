@@ -27,7 +27,7 @@ image:
 
 caption:
   # アカウント: @zaidan_bento（在宅だんな弁当）
-  base_hashtags: ["#在宅だんな弁当", "#わっぱ弁当", "#旦那弁当", "#在宅ワーク", "#共働き", "#お弁当"]
+  base_hashtags: ["#在宅だんな弁当", "#わっぱ弁当"]   # Instagram は1投稿5個まで（2025年12月〜）
   # 自分らしい口調のヒント（自由に書き換えてOK）
   voice: >-
     週5フルリモートで家で働く旦那に、妻がお弁当を作って渡している設定。
@@ -44,7 +44,7 @@ experiment:
     title_style: [kakko, plain, date]       # ＼ 〇〇弁当 ／ / 〇〇弁当 / 11.21 〇〇弁当
     pen: [marker, thin]                     # 手書き文字のペンの太さ（マーカー / 細ペン）
     caption_length: [short, long]           # コメントの長さ
-    hashtag_count: [8, 15, 25]              # ハッシュタグの数
+    hashtag_count: [3, 5]                   # ハッシュタグの数（上限5）
 
 analysis:
   mature_hours: 72              # 投稿からこの時間が経った投稿だけで評価する
