@@ -24,7 +24,7 @@ image:
   width: 1080
   height: 1350                  # 4:5（フィードで一番大きく表示される縦長）
   jpeg_quality: 92
-  memo_slide: true              # 3枚目に「作り置きメモ」を付ける
+  memo_slide: false             # 3枚目に「作り置きメモ」を付ける（true で有効）
   color:                        # 1枚目の色補正（料理の形は変えない）
     enabled: true
     white_balance: 0.5          # 色かぶりを戻す強さ（0〜1）
