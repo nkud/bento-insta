@@ -44,7 +44,7 @@ Instagram にカルーセル投稿（2枚）
 | 試すこと | 選択肢 |
 |---|---|
 | タイトルの書き方 | `＼ 〇〇弁当 ／` / `〇〇弁当` / `11.21 〇〇弁当` |
-| 手書きフォント | よもぎ / クレー / くれないど |
+| 手書き文字のペン | マーカー / 細ペン |
 | コメントの長さ | 短め / 長め |
 | ハッシュタグ数 | 8 / 15 / 25 |
 
@@ -115,7 +115,7 @@ python src/post.py --local 写真.jpg --memo "お隣さんから手羽元をも�
 
 - `config.yaml`
   - `caption.voice` / `signature` / `base_hashtags`：口調・毎回の署名・必ず付けるタグ
-  - `experiment.dimensions`：試すパターンを増減（フォントは `fonts/` に ttf を足して `src/annotate.py` の `FONT_FILES` に追加）
+  - `experiment.dimensions`：試すパターンを増減
 - 手書きの見た目：`src/annotate.py`（文字サイズ・線の太さ・影など）
 
 ## 構成
@@ -125,14 +125,15 @@ config.yaml               設定
 src/post.py               Drive → 解析 → 加工 → 下書きIssue／予約投稿
 src/approve.py            Issue コメント（/post /redo /skip）の処理
 src/vision.py             Claude で写真解析
-src/annotate.py           手書き風の2枚目を作成
+src/annotate.py           手書き風の2枚目を作成（レイアウト・引き出し線）
+src/handwriting.py        書き順データで文字を手書きする
 src/caption.py            キャプション生成（学習結果を反映）
 src/strategy.py           どのパターンで投稿するか選ぶ
 src/metrics.py            反応の集計
 src/analyze.py            分析・レポート・方針の更新
 data/                     投稿記録・方針（Actions が自動更新）
 docs/report.html          レポート
-fonts/                    手書き風フォント（SIL Open Font License）
+fonts/                    書き順データ KanjiVG（CC BY-SA 3.0, © Ulrich Apel）と予備フォント Yusei Magic（OFL）
 .github/workflows/        定期実行
 ```
 

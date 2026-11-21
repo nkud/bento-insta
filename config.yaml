@@ -42,7 +42,7 @@ experiment:
   min_samples_per_arm: 3        # 各パターン最低この回数は試してから判断
   dimensions:
     title_style: [kakko, plain, date]       # ＼ 〇〇弁当 ／ / 〇〇弁当 / 11.21 〇〇弁当
-    font: [yomogi, klee, kurenaido]         # 手書き風フォント
+    pen: [marker, thin]                     # 手書き文字のペンの太さ（マーカー / 細ペン）
     caption_length: [short, long]           # コメントの長さ
     hashtag_count: [8, 15, 25]              # ハッシュタグの数
 

@@ -22,11 +22,11 @@ WEEK = "月火水木金土日"
 MAIN_JA = {"meat": "肉", "fish": "魚", "egg": "卵", "tofu_veg": "豆腐・野菜", "rice_dish": "ご飯もの",
            "noodle": "麺", "other": "その他"}
 TONE_JA = {"brown": "茶色", "colorful": "カラフル", "green": "緑多め", "white": "白っぽい", "other": "その他"}
-DIM_JA = {"title_style": "タイトルの書き方", "font": "手書きフォント", "caption_length": "コメントの長さ",
+DIM_JA = {"title_style": "タイトルの書き方", "pen": "ペンの太さ", "caption_length": "コメントの長さ",
           "hashtag_count": "ハッシュタグ数", "main": "主菜", "tone": "色味", "dish_count": "品数",
           "weekday": "曜日", "hour": "投稿時間帯"}
 ARM_JA = {"kakko": "＼〇〇弁当／", "plain": "〇〇弁当", "date": "日付＋〇〇弁当",
-          "yomogi": "よもぎ", "klee": "クレー", "kurenaido": "くれないど", "short": "短め", "long": "長め"}
+          "marker": "マーカー", "thin": "細ペン", "short": "短め", "long": "長め"}
 
 
 def _num(v):
