@@ -88,6 +88,9 @@ def main():
 
     # ---- 投稿してよいタイミングか
     force = args.force or env("FORCE") == "1"
+    if not force and not dry and cfg["posting"].get("paused"):
+        print("config.yaml の posting.paused が true のため自動投稿は停止中です。スキップ")
+        return
     hours = strat.allowed_hours(cfg, strategy)
     if not force and not dry and now.hour not in hours:
         print(f"投稿時間外です（現在 {now.hour}時 / 許可 {hours}）。スキップ")
