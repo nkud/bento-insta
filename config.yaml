@@ -7,13 +7,9 @@ drive:
   folder_id: ""
 
 posting:
-  paused: true                  # true の間は自動投稿しない（dry_run と force 実行は可）。確認が済んだら false に
-  max_posts_per_run: 1          # 1回の実行で投稿する最大枚数（連投を防ぐ）
-  min_interval_hours: 3         # 前回投稿からこの時間が経つまで次を投稿しない
-  allowed_hours_jst: [7, 8, 9, 10, 11, 12, 13, 17, 18, 19, 20, 21]
-  # 十分なデータが集まったら、分析で分かった「伸びる時間帯」を優先する
-  use_learned_hours: true
-  max_retries: 3                # 失敗した写真を何回まで再挑戦するか
+  # 写真は「下書き」Issue になり、コメント（/post など）で承認したものだけ投稿されます。
+  max_drafts_per_run: 3         # 1回の実行で作る下書きの最大数
+  max_retries: 3                # 下書き作成に失敗した写真を何回まで再挑戦するか
 
 claude:
   model: claude-sonnet-5-5

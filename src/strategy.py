@@ -28,10 +28,3 @@ def choose_variant(cfg: dict, strategy: dict, rng: random.Random | None = None) 
         variant[dim] = pick
     return variant
 
-
-def allowed_hours(cfg: dict, strategy: dict) -> list[int]:
-    hours = cfg["posting"]["allowed_hours_jst"]
-    learned = strategy.get("insights", {}).get("best_posting_hours") or []
-    if cfg["posting"].get("use_learned_hours") and strategy.get("learning_active") and learned:
-        return sorted({int(h) for h in learned})
-    return hours

@@ -1,24 +1,16 @@
-name: お弁当を投稿
+name: お弁当の下書きを作成・予約投稿
 
 on:
   schedule:
-    - cron: "*/30 * * * *"        # 30分ごとに Drive をチェック（投稿時間帯は config.yaml で制御）
+    - cron: "*/15 * * * *"        # 15分ごと：予約時刻を過ぎた下書きの投稿 ＋ Drive の新しい写真から下書き作成
   workflow_dispatch:
-    inputs:
-      force:
-        description: "時間帯・間隔の制限を無視して今すぐ投稿"
-        type: boolean
-        default: false
-      dry_run:
-        description: "投稿せずに画像とキャプションだけ作る（Artifacts で確認）"
-        type: boolean
-        default: false
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
-  group: bento-state            # 投稿・集計が同時に data/ を書き換えないように
+  group: bento-state            # 投稿・承認・集計が同時に data/ を書き換えないように
   cancel-in-progress: false
 
 jobs:
@@ -33,7 +25,7 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
 
-      - name: 新しい写真を投稿
+      - name: 予約投稿と下書き作成
         run: python src/post.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -44,23 +36,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MEDIA_REPO: ${{ secrets.MEDIA_REPO }}
           MEDIA_REPO_TOKEN: ${{ secrets.MEDIA_REPO_TOKEN }}
-          FORCE: ${{ inputs.force && '1' || '0' }}
-          DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
 
-      - name: ドライランの結果を保存
-        if: ${{ inputs.dry_run }}
-        uses: actions/upload-artifact@v5
-        with:
-          name: dry-run-output
-          path: out/
-
-      - name: 投稿記録をコミット
+      - name: 記録をコミット
         if: always()
         run: |
           git config user.name "bento-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/
           if ! git diff --cached --quiet; then
-            git commit -m "post: 投稿記録を更新"
+            git commit -m "post: 記録を更新"
             git pull --rebase && git push
           fi

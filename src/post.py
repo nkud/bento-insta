@@ -1,9 +1,17 @@
-"""Drive の新しいお弁当写真を見つけて、加工して Instagram に投稿する。
+"""お弁当写真 → 下書き（GitHub Issue）→ 承認されたら Instagram に投稿。
 
-使い方:
-  python src/post.py                 # 本番（GitHub Actions から呼ばれる）
-  python src/post.py --dry-run       # 投稿せず out/ に画像とキャプションを書き出す
-  python src/post.py --local a.jpg   # Drive を使わず手元の写真で試す（--dry-run と併用推奨）
+定期実行（post.yml）でやること:
+  1. 予約時刻を過ぎた下書きを投稿する
+  2. Drive の新しい写真から下書き Issue を作る（ここでは投稿しない）
+
+承認・修正はIssueのコメントで行う（approve.py）:
+  /post            今すぐ投稿
+  /post 19:30      時刻を指定して予約（「明日 8:00」も可）
+  /redo [メモ]     作り直し（メモを足すとキャプションに反映）
+  /skip            投稿しない
+
+手元で試す:
+  python src/post.py --local a.jpg --memo "..."   # out/ に画像とキャプションを書き出す
 """
 from __future__ import annotations
 
@@ -13,6 +21,7 @@ import io
 import json
 import pathlib
 import random
+import re
 import sys
 import traceback
 import zlib
@@ -32,7 +41,11 @@ try:
 except ImportError:
     pass
 
+DRAFT_LABEL = "下書き"
+SCHEDULED_LABEL = "予約済み"
 
+
+# ------------------------------------------------------------------ 画像とキャプションを作る
 def open_image(raw: bytes) -> Image.Image:
     img = Image.open(io.BytesIO(raw))
     img = ImageOps.exif_transpose(img)           # スマホ写真の向きを補正
@@ -46,7 +59,7 @@ def to_jpeg(img: Image.Image, q: int) -> bytes:
 
 
 def make_post(img: Image.Image, memo: str, cfg: dict, strategy: dict, seed: int) -> dict:
-    """解析 → 切り出し → 手書き風画像 → キャプション。投稿前までの全部。"""
+    """解析 → 切り出し → 手書き風画像 → キャプション。"""
     analysis = vision.analyze(img, memo, cfg["claude"]["model"])
     if not analysis.get("is_bento", True):
         raise ValueError("お弁当の写真ではないと判定されました")
@@ -66,44 +79,108 @@ def make_post(img: Image.Image, memo: str, cfg: dict, strategy: dict, seed: int)
             "img1": to_jpeg(photo, q), "img2": to_jpeg(drawn, q)}
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--local", help="手元の画像ファイルで試す")
-    ap.add_argument("--memo", default="", help="--local 用のメモ")
-    ap.add_argument("--force", action="store_true", help="投稿時間帯・間隔の制限を無視")
-    args = ap.parse_args()
-    dry = args.dry_run or env("DRY_RUN") == "1"
+# ------------------------------------------------------------------ 下書き Issue
+def issue_body(rec: dict, strategy: dict) -> str:
+    u1, u2 = rec["image_urls"]
+    hint = ""
+    hours = (strategy.get("insights") or {}).get("best_posting_hours") or []
+    if strategy.get("learning_active") and hours:
+        hint = f"\n> 📈 これまでのデータでは **{'・'.join(f'{h}時' for h in sorted(hours))}** ごろの投稿が伸びやすいです\n"
+    memo = f"\n**メモ:** {rec['memo']}\n" if rec.get("memo") else ""
+    v = rec.get("variant", {})
+    return f"""## 🍱 {rec['title']}
 
-    cfg = load_config()
-    strategy = strat.load()
-    posts = load_json(POSTS_FILE, [])
-    now = now_jst()
+| 1枚目 | 2枚目 |
+|---|---|
+| <img src="{u1}" width="300"> | <img src="{u2}" width="300"> |
+{memo}
+### ✏️ キャプション
+下の枠の中を編集すると、そのまま投稿されます（右上の「…」→ Edit）。
 
-    # ---- ローカル試行
-    if args.local:
-        raw = pathlib.Path(args.local).read_bytes()
-        p = make_post(open_image(raw), args.memo, cfg, strategy, seed=int(now.timestamp()))
-        _write_out("local", p)
-        return
+<!-- caption:start -->
+```text
+{rec['caption']}
+```
+<!-- caption:end -->
 
-    # ---- 投稿してよいタイミングか
-    force = args.force or env("FORCE") == "1"
-    if not force and not dry and cfg["posting"].get("paused"):
-        print("config.yaml の posting.paused が true のため自動投稿は停止中です。スキップ")
-        return
-    hours = strat.allowed_hours(cfg, strategy)
-    if not force and not dry and now.hour not in hours:
-        print(f"投稿時間外です（現在 {now.hour}時 / 許可 {hours}）。スキップ")
-        return
-    last = max((p["posted_at"] for p in posts if p.get("status") == "posted"), default=None)
-    gap_h = cfg["posting"]["min_interval_hours"]
-    if not force and not dry and last and now - dt.datetime.fromisoformat(last) < dt.timedelta(hours=gap_h):
-        print(f"前回投稿から {gap_h} 時間経っていません。スキップ")
-        return
+### 💬 コメントで操作
+| コメント | 動き |
+|---|---|
+| `/post` | 今すぐ投稿 |
+| `/post 19:30` | 時刻を指定して予約（`/post 明日 8:00` も可） |
+| `/redo` | 作り直し。`/redo 肉巻きは豚バラ、お隣さんからの差し入れ` のようにメモも足せる |
+| `/skip` | 投稿しない |
+{hint}
+<sub>パターン: タイトル={v.get('title_style')} / フォント={v.get('font')} / コメント={v.get('caption_length')} / タグ数={v.get('hashtag_count')}</sub>
+<!-- drive_file_id: {rec['drive_file_id']} -->
+"""
 
-    # ---- Drive から新しい写真を探す
+
+def parse_caption(body: str) -> str | None:
+    m = re.search(r"<!-- caption:start -->\s*```[a-z]*\n(.*?)\n```\s*<!-- caption:end -->", body or "", re.S)
+    return m.group(1).strip() if m else None
+
+
+def build_draft(svc, folder: str, rec: dict, cfg: dict, strategy: dict, extra_memo: str = "") -> None:
+    """Drive の写真から画像・キャプションを作り、公開 URL に置いて rec に書き込む。"""
     import drive
+    import hosting
+    f = {"id": rec["drive_file_id"], "name": rec["drive_name"], "description": rec.get("drive_description")}
+    memo = drive.find_memo(svc, folder, f)
+    if extra_memo:
+        memo = (memo + "\n" + extra_memo).strip()
+    img = open_image(drive.download(svc, f["id"]))
+    rec["attempts"] = rec.get("attempts", 0) + 1
+    seed = zlib.crc32(f"{f['id']}-{rec['attempts']}".encode())
+    p = make_post(img, memo, cfg, strategy, seed=seed)
+    stamp = now_jst().strftime("%Y%m%d-%H%M%S")
+    url1 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-1.jpg", p["img1"])
+    url2 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-2.jpg", p["img2"])
+    rec.update({"memo": memo, "title": p["analysis"]["title"], "analysis": p["analysis"],
+                "variant": p["variant"], "caption": p["caption"], "image_urls": [url1, url2], "error": None})
+
+
+# ------------------------------------------------------------------ 投稿
+def publish(rec: dict, cfg: dict) -> None:
+    """Issue 上の（編集済みかもしれない）キャプションで Instagram に投稿する。"""
+    import github_api as gh
+    from instagram import IG
+    issue = gh.get_issue(rec["issue_number"])
+    text = parse_caption(issue.get("body", "")) or rec["caption"]
+    ig = IG(cfg["instagram"]["graph_version"], cfg["instagram"].get("host", "graph.facebook.com"))
+    info = ig.publish_carousel(rec["image_urls"], text)
+    rec.update({"status": "posted", "ig_media_id": info["id"], "permalink": info.get("permalink"),
+                "posted_at": now_jst().isoformat(), "caption_edited": text != rec["caption"],
+                "caption": text, "hashtags": caption.hashtags_of(text), "scheduled_at": None})
+    try:
+        rec["followers_at_post"] = ig.account().get("followers_count")
+    except RuntimeError:
+        pass
+    gh.comment(rec["issue_number"], f"✅ 投稿しました！ {rec.get('permalink') or ''}")
+    gh.set_labels(rec["issue_number"], ["投稿済み"])
+    gh.update_issue(rec["issue_number"], state="closed")
+
+
+def publish_due(posts: list, cfg: dict) -> None:
+    import github_api as gh
+    now = now_jst()
+    for rec in posts:
+        if rec.get("status") == "scheduled" and rec.get("scheduled_at") \
+                and dt.datetime.fromisoformat(rec["scheduled_at"]) <= now:
+            try:
+                publish(rec, cfg)
+                print(f"予約投稿しました: {rec.get('permalink')}")
+            except Exception as e:  # noqa: BLE001
+                traceback.print_exc()
+                rec.update({"status": "draft", "error": str(e)[:500], "scheduled_at": None})
+                gh.comment(rec["issue_number"], f"⚠️ 予約投稿に失敗しました。もう一度 `/post` してください。\n```\n{e}\n```")
+                gh.set_labels(rec["issue_number"], [DRAFT_LABEL])
+            save_json(POSTS_FILE, posts)
+
+
+def prepare_drafts(posts: list, cfg: dict, strategy: dict) -> int:
+    import drive
+    import github_api as gh
     folder = env("DRIVE_FOLDER_ID") or cfg["drive"]["folder_id"]
     if not folder:
         raise SystemExit("DRIVE_FOLDER_ID が未設定です")
@@ -113,64 +190,55 @@ def main():
     todo = [f for f in drive.list_images(svc, folder)
             if f["id"] not in by_id
             or (by_id[f["id"]].get("status") == "failed" and by_id[f["id"]].get("attempts", 0) < max_retry)]
-    print(f"未投稿の写真: {len(todo)} 枚")
-    if not todo:
+    print(f"新しい写真: {len(todo)} 枚")
+    if not todo and not by_id:
         sa = json.loads(env("GOOGLE_SERVICE_ACCOUNT_JSON"))["client_email"]
         print(f"※ 写真が見つかりません。Drive フォルダ（ID: {folder}）が {sa} に共有されているか確認してください")
     failed = 0
-
-    for f in todo[: cfg["posting"]["max_posts_per_run"]]:
+    for f in todo[: cfg["posting"]["max_drafts_per_run"]]:
         rec = by_id.get(f["id"]) or {"drive_file_id": f["id"], "drive_name": f["name"],
                                      "drive_created": f["createdTime"], "attempts": 0}
-        is_new = rec not in posts
-        if is_new:
+        rec["drive_description"] = f.get("description")
+        if rec not in posts:
             posts.append(rec)
-        rec["attempts"] = rec.get("attempts", 0) + 1
         try:
-            memo = drive.find_memo(svc, folder, f)
-            img = open_image(drive.download(svc, f["id"]))
-            p = make_post(img, memo, cfg, strategy, seed=zlib.crc32(f["id"].encode()))
-            rec.update({"memo": memo, "title": p["analysis"]["title"],
-                        "analysis": p["analysis"], "variant": p["variant"], "caption": p["caption"],
-                        "hashtags": caption.hashtags_of(p["caption"])})
-            if dry:
-                _write_out(f["id"], p)
-                if is_new:
-                    posts.remove(rec)    # ドライランは記録しない
-                continue
-
-            import hosting
-            from instagram import IG
-            stamp = now.strftime("%Y%m%d-%H%M")
-            url1 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-1.jpg", p["img1"])
-            url2 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-2.jpg", p["img2"])
-            ig = IG(cfg["instagram"]["graph_version"], cfg["instagram"].get("host", "graph.facebook.com"))
-            info = ig.publish_carousel([url1, url2], p["caption"])
-            rec.update({"status": "posted", "ig_media_id": info["id"], "permalink": info.get("permalink"),
-                        "posted_at": now.isoformat(), "image_urls": [url1, url2], "error": None})
-            try:
-                rec["followers_at_post"] = ig.account().get("followers_count")
-            except RuntimeError:
-                pass
-            print(f"投稿しました: {info.get('permalink')}")
+            build_draft(svc, folder, rec, cfg, strategy)
+            rec["issue_number"] = gh.create_issue(f"🍱 下書き：{rec['title']}", issue_body(rec, strategy),
+                                                  [DRAFT_LABEL])
+            rec["status"] = "draft"
+            print(f"下書きを作りました: #{rec['issue_number']} {rec['title']}")
         except Exception as e:  # noqa: BLE001
             traceback.print_exc()
             rec.update({"status": "failed", "error": str(e)[:500]})
             failed += 1
-            if dry and is_new and rec in posts:
-                posts.remove(rec)        # ドライランの失敗は記録しない
         finally:
-            save_json(POSTS_FILE, posts)   # 1枚ごとに保存して二重投稿を防ぐ
+            save_json(POSTS_FILE, posts)
+    return failed
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--local", help="手元の画像ファイルで試す（out/ に書き出すだけ）")
+    ap.add_argument("--memo", default="", help="--local 用のメモ")
+    args = ap.parse_args()
+    cfg = load_config()
+    strategy = strat.load()
+
+    if args.local:
+        raw = pathlib.Path(args.local).read_bytes()
+        p = make_post(open_image(raw), args.memo, cfg, strategy, seed=int(now_jst().timestamp()))
+        OUT.mkdir(exist_ok=True)
+        (OUT / "local-1.jpg").write_bytes(p["img1"])
+        (OUT / "local-2.jpg").write_bytes(p["img2"])
+        (OUT / "local-caption.txt").write_text(p["caption"], encoding="utf-8")
+        print(f"out/ に書き出しました\n---\n{p['caption']}\n---\nパターン: {p['variant']}")
+        return
+
+    posts = load_json(POSTS_FILE, [])
+    publish_due(posts, cfg)
+    failed = prepare_drafts(posts, cfg, strategy)
     if failed:
         sys.exit(f"{failed} 枚の処理に失敗しました（上のエラーを確認）")
-
-
-def _write_out(name: str, p: dict):
-    OUT.mkdir(exist_ok=True)
-    (OUT / f"{name}-1.jpg").write_bytes(p["img1"])
-    (OUT / f"{name}-2.jpg").write_bytes(p["img2"])
-    (OUT / f"{name}-caption.txt").write_text(p["caption"], encoding="utf-8")
-    print(f"out/{name}-*.jpg と caption を書き出しました\n---\n{p['caption']}\n---\n変化軸: {p['variant']}")
 
 
 if __name__ == "__main__":

@@ -5,12 +5,13 @@ Google Drive に写真を入れるだけで、GitHub Actions が見つけて加�
 
 ```
 Google Drive（写真を入れる）
-   │  30分ごとにチェック
+   │  15分ごとにチェック
    ▼
-GitHub Actions ── Claude で解析（お弁当名・おかず名・位置）
-   │              ├ 1枚目：写真を 4:5 に整える
-   │              ├ 2枚目：おかず名を手書き風に書き込み
-   │              └ キャプション：内容☆リスト＋ひとこと＋ハッシュタグ
+GitHub Actions ── Claude で解析 → 1枚目（4:5に整える）／2枚目（手書き風おかずメモ）／キャプション
+   ▼
+GitHub Issue に「下書き」が届く（スマホの GitHub アプリに通知）
+   │  キャプションは Issue を編集して直せる
+   │  コメントで指示： /post  /post 19:30  /redo メモ  /skip
    ▼
 Instagram にカルーセル投稿（2枚）
    │  毎日 4時に集計
@@ -20,10 +21,21 @@ Instagram にカルーセル投稿（2枚）
 
 ## 使い方（セットアップ後）
 
-1. スマホで Google Drive の「お弁当」フォルダに写真をアップロード（HEIC もOK）
-2. 30分以内に Actions が拾って投稿（投稿してよい時間帯・間隔は `config.yaml`）
-3. エピソードを入れたいとき：Drive で写真の「説明」欄に書くか、同じ名前の `.txt`（例 `IMG_1234.txt`）を置く
-   例：「手羽元煮はお隣さんからの差し入れ」→ キャプションに自然に入ります
+1. Google Drive の「お弁当」フォルダに写真をアップロード（HEIC もOK）
+   - エピソードを入れたいときは、写真の「説明」欄か同名の `.txt` に書く
+2. 15分以内に Issue「🍱 下書き：〇〇弁当」が届く。**ここでは投稿されません**
+3. 画像とキャプションを確認して、Issue にコメント
+
+| コメント | 動き |
+|---|---|
+| `/post` | 今すぐ投稿 |
+| `/post 19:30` | 時刻を指定して予約（`/post 明日 8:00` も可。15分おきのチェックで投稿） |
+| `/redo` | 作り直し。`/redo 肉巻きは豚バラ、お隣さんからの差し入れ` のようにメモも足せる |
+| `/skip` | 投稿しない |
+
+- キャプションを直したいときは、Issue 本文の枠の中を編集（右上「…」→ Edit）。投稿時に編集後の内容が使われます
+- コマンドはリポジトリの持ち主のコメントだけ受け付けます（👀 が付いたら受付済み）
+- 分析で「伸びる時間帯」が分かってくると、下書きにおすすめ時刻が表示されます
 
 ## 学習のしくみ
 
@@ -88,23 +100,20 @@ Instagram にカルーセル投稿（2枚）
 ### 5. 動作確認
 
 1. Drive に写真を1枚入れる
-2. Actions → 「お弁当を投稿」→ Run workflow で **dry_run にチェック** → 実行
-3. 実行結果の Artifacts `dry-run-output` で、2枚の画像とキャプションを確認
-4. よければ `force` にチェックして実行 → 実際に投稿されます。以後は自動
+2. Actions → 「お弁当の下書きを作成・予約投稿」→ Run workflow（または15分待つ）
+3. Issues に下書きが届くので、確認して `/post`
 
 手元で試す場合：
 ```bash
 pip install -r requirements.txt
 export ANTHROPIC_API_KEY=...
-python src/post.py --local 写真.jpg --memo "お隣さんから手羽元をもらった" --dry-run
+python src/post.py --local 写真.jpg --memo "お隣さんから手羽元をもらった"
 # → out/ に画像2枚とキャプション
 ```
 
 ## カスタマイズ
 
 - `config.yaml`
-  - `posting.allowed_hours_jst`：投稿してよい時間（学習後は伸びる時間帯を優先）
-  - `posting.min_interval_hours`：連投防止の間隔
   - `caption.voice` / `signature` / `base_hashtags`：口調・毎回の署名・必ず付けるタグ
   - `experiment.dimensions`：試すパターンを増減（フォントは `fonts/` に ttf を足して `src/annotate.py` の `FONT_FILES` に追加）
 - 手書きの見た目：`src/annotate.py`（文字サイズ・線の太さ・影など）
@@ -113,7 +122,8 @@ python src/post.py --local 写真.jpg --memo "お隣さんから手羽元をも�
 
 ```
 config.yaml               設定
-src/post.py               Drive → 解析 → 加工 → 投稿
+src/post.py               Drive → 解析 → 加工 → 下書きIssue／予約投稿
+src/approve.py            Issue コメント（/post /redo /skip）の処理
 src/vision.py             Claude で写真解析
 src/annotate.py           手書き風の2枚目を作成
 src/caption.py            キャプション生成（学習結果を反映）
@@ -130,4 +140,4 @@ fonts/                    手書き風フォント（SIL Open Font License）
 
 - GitHub Actions の定期実行は混雑時に数分〜数十分遅れることがあります
 - Instagram の投稿上限は24時間で50件（カルーセルは1件扱い）
-- 一度失敗した写真は最大3回まで再挑戦し、それでもダメなら `data/posts.json` の `error` に理由が残ります
+- 下書き作成に失敗した写真は最大3回まで再挑戦し、それでもダメなら `data/posts.json` の `error` に理由が残ります
