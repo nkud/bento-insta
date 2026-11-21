@@ -15,7 +15,7 @@ STOP_AFTER_DAYS = 45           # これより古い投稿は更新しない
 
 def main():
     cfg = load_config()
-    ig = IG(cfg["instagram"]["graph_version"])
+    ig = IG(cfg["instagram"]["graph_version"], cfg["instagram"].get("host", "graph.facebook.com"))
     posts = load_json(POSTS_FILE, [])
     now = now_jst()
 

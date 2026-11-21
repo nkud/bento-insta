@@ -1,4 +1,4 @@
-"""Instagram API（Instagram ログイン方式）でカルーセル投稿・指標取得。"""
+"""Instagram API でカルーセル投稿・指標取得（統合ログイン / Instagram ログイン両対応）。"""
 from __future__ import annotations
 
 import time
@@ -9,10 +9,16 @@ from common import env
 
 
 class IG:
-    def __init__(self, version: str = "v26.0"):
+    def __init__(self, version: str = "v26.0", host: str = "graph.facebook.com"):
+        # 統合ログインのシステムユーザートークン（EAA...）は graph.facebook.com、
+        # Instagram ログインのトークン（IGAA...）は graph.instagram.com を使う
         self.token = env("IG_ACCESS_TOKEN", required=True)
-        self.base = f"https://graph.instagram.com/{version}"
-        self.user_id = env("IG_USER_ID") or self.get("me", fields="user_id")["user_id"]
+        self.base = f"https://{host}/{version}"
+        self.user_id = env("IG_USER_ID")
+        if not self.user_id:
+            if host != "graph.instagram.com":
+                raise SystemExit("IG_USER_ID（Instagram のユーザーID）を Secrets に登録してください")
+            self.user_id = self.get("me", fields="user_id")["user_id"]
 
     # ---- 低レベル
     def _check(self, r: requests.Response) -> dict:
@@ -76,4 +82,4 @@ class IG:
             return out
 
     def account(self) -> dict:
-        return self.get("me", fields="username,followers_count,media_count")
+        return self.get(self.user_id, fields="username,followers_count,media_count")

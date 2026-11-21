@@ -19,6 +19,9 @@ claude:
 
 instagram:
   graph_version: v26.0
+  # 統合ログインのシステムユーザートークン（EAA...、期限なし）→ graph.facebook.com
+  # Instagram ログインのトークン（IGAA...、60日）→ graph.instagram.com
+  host: graph.facebook.com
 
 image:
   width: 1080

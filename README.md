@@ -54,7 +54,8 @@ Instagram にカルーセル投稿（2枚）
 3. 「Instagram ログインによる API 設定」で自分のアカウントを追加し、**アクセストークンを生成**
    - 権限：`instagram_business_basic` / `instagram_business_content_publish` / `instagram_business_manage_insights`
    - 自分のアカウントにだけ投稿する用途なので、アプリは開発モードのままで使えるはずです（アカウントにアプリのテスター等の役割が付いていること）
-4. 生成したトークン（60日有効）を控える。期限は `refresh-token.yml` が月2回自動で延長します
+4. 統合ログイン（Unified login）の場合はビジネスポートフォリオを紐づけ、ステップ1でテンプレートから設定を作成 → ステップ2でトークン生成。システムユーザートークン（`EAA...`）は期限なし
+   - Instagram ログインのトークン（`IGAA...`、60日）を使う場合は `config.yaml` の `instagram.host` を `graph.instagram.com` に
 
 ### 2. Google Drive 側
 
@@ -82,8 +83,7 @@ Instagram にカルーセル投稿（2枚）
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | サービスアカウントの JSON（ファイルの中身をそのまま） |
 | `DRIVE_FOLDER_ID` | お弁当フォルダの ID |
 | `IG_ACCESS_TOKEN` | Instagram のアクセストークン |
-| `IG_USER_ID` | （任意）Instagram のユーザーID。空なら自動取得 |
-| `GH_PAT` | トークン自動更新用。Fine-grained PAT（このリポジトリの **Secrets: Read and write**） |
+| `IG_USER_ID` | Instagram のユーザーID（トークン生成画面に出る `1784...` の数字） |
 
 ### 5. 動作確認
 

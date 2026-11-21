@@ -136,7 +136,7 @@ def main():
             stamp = now.strftime("%Y%m%d-%H%M")
             url1 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-1.jpg", p["img1"])
             url2 = hosting.upload(f"media/{stamp}-{f['id'][:8]}-2.jpg", p["img2"])
-            ig = IG(cfg["instagram"]["graph_version"])
+            ig = IG(cfg["instagram"]["graph_version"], cfg["instagram"].get("host", "graph.facebook.com"))
             info = ig.publish_carousel([url1, url2], p["caption"])
             rec.update({"status": "posted", "ig_media_id": info["id"], "permalink": info.get("permalink"),
                         "posted_at": now.isoformat(), "image_urls": [url1, url2], "error": None})
