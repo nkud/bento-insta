@@ -49,21 +49,13 @@ def _font(name: str, size: int) -> ImageFont.FreeTypeFont:
 
 
 def _wrap(text: str, n: int) -> list[str]:
-    """日本語を n 文字ごとに折り返す（短い名前はそのまま）。"""
-    if len(text) <= n + 1:
+    """日本語を折り返す。n+2 文字までは1行、それ以上は行の長さが揃うよう均等に分ける。
+    例: にんじんしりしり → にんじん / しりしり"""
+    if len(text) <= n + 2:
         return [text]
-    lines, cur = [], ""
-    for ch in text:
-        cur += ch
-        if len(cur) >= n:
-            lines.append(cur)
-            cur = ""
-    if cur:
-        if len(cur) == 1 and lines:      # 1文字だけ残るのを防ぐ
-            lines[-1] += cur
-        else:
-            lines.append(cur)
-    return lines
+    k = -(-len(text) // n)                 # 必要な行数
+    size = -(-len(text) // k)              # 1行あたりの文字数（均等）
+    return [text[i:i + size] for i in range(0, len(text), size)]
 
 
 def _measure(lines: list[str], font) -> tuple[float, float, float]:
