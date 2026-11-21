@@ -1,1 +1,80 @@
-[]
+[
+  {
+    "drive_file_id": "1NYsoWgz36d9vSYyMzBM_-3pavsY5QfFz",
+    "drive_name": "IMG_1658.HEIC",
+    "drive_created": "2026-11-21T05:41:45.608Z",
+    "attempts": 1,
+    "drive_description": null,
+    "memo": "",
+    "title": "オムレツ弁当",
+    "analysis": {
+      "is_bento": true,
+      "title": "オムレツ弁当",
+      "bento_bbox": {
+        "x0": 0.12,
+        "y0": 0.12,
+        "x1": 0.82,
+        "y1": 0.81
+      },
+      "dishes": [
+        {
+          "name": "オムレツ",
+          "note": "ケチャップとパセリ",
+          "x": 0.52,
+          "y": 0.38
+        },
+        {
+          "name": "ほうれん草のおひたし",
+          "note": "ごま和え風",
+          "x": 0.6,
+          "y": 0.2
+        },
+        {
+          "name": "ちくわの磯辺揚げ",
+          "x": 0.21,
+          "y": 0.4
+        },
+        {
+          "name": "コロッケ",
+          "note": "衣がカリッと",
+          "x": 0.28,
+          "y": 0.57
+        },
+        {
+          "name": "ポテトサラダ",
+          "note": "カップ入り",
+          "x": 0.4,
+          "y": 0.66
+        },
+        {
+          "name": "豆苗と油揚げ炒め",
+          "x": 0.54,
+          "y": 0.72
+        }
+      ],
+      "main": "egg",
+      "tone": "other",
+      "box": "曲げわっぱ風の1段弁当箱",
+      "highlights": [
+        "ケチャップのジグザグ模様",
+        "ふわふわ黄色いオムレツ",
+        "青菜の緑がアクセント",
+        "揚げ物もしっかり入ってボリューム満点"
+      ]
+    },
+    "variant": {
+      "title_style": "plain",
+      "pen": "marker",
+      "caption_length": "long",
+      "hashtag_count": 15
+    },
+    "caption": "オムレツ弁当\n☆オムレツ\n☆ほうれん草のおひたし\n☆ちくわの磯辺揚げ\n☆コロッケ\n☆ポテトサラダ\n☆豆苗と油揚げ炒め\n\n今日はふわふわオムレツにケチャップをジグザグ〜っと描いてみたよ🍳 コツは弱火でじっくり焼くこと、焦げ目がつかなくて黄色がきれいに仕上がるの。ほうれん草と豆苗の緑がいいアクセントで、コロッケと磯辺揚げも入ってボリューム満点！ 今日も在宅おつかれさま、午後もゆるっとがんばってね😊\n\n#在宅だんな弁当\n#わっぱ弁当\n#旦那弁当\n#在宅ワーク\n#共働き\n#お弁当\n#オムレツ弁当\n#オムレツ\n#ほうれん草のおひたし\n#ちくわの磯辺揚げ\n#コロッケ\n#豆苗\n#曲げわっぱ\n#手作り弁当\n#季節の食卓",
+    "image_urls": [
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261121-144955-1NYsoWgz-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261121-144955-1NYsoWgz-2.jpg"
+    ],
+    "error": null,
+    "issue_number": 1,
+    "status": "draft"
+  }
+]
