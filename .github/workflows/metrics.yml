@@ -51,17 +51,11 @@ jobs:
           name: report
           path: docs/report.html
 
-      - name: ダッシュボードを更新
-        if: always()
-        run: python src/dashboard.py
-        env:
-          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-
       - name: コミット
         run: |
           git config user.name "bento-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/ docs/
+          git add data/ docs/ 2>/dev/null || git add data/
           if ! git diff --cached --quiet; then
             git commit -m "metrics: 反応を集計"
             git pull --rebase && git push
