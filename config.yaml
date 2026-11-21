@@ -8,7 +8,7 @@ drive:
 
 posting:
   # 写真は「下書き」Issue になり、コメント（/post など）で承認したものだけ投稿されます。
-  max_drafts_per_run: 3         # 1回の実行で作る下書きの最大数
+  max_drafts_per_run: 10        # 1回の実行で作る下書きの最大数
   max_retries: 3                # 下書き作成に失敗した写真を何回まで再挑戦するか
 
 claude:
