@@ -407,5 +407,218 @@
     "error": null,
     "issue_number": 4,
     "status": "draft"
+  },
+  {
+    "drive_file_id": "16_U-yMqAqWTtqvvYDBnHNWYHVkbBNIRy",
+    "drive_name": "IMG_1758.HEIC",
+    "drive_created": "2026-11-21T15:10:54.790Z",
+    "attempts": 1,
+    "drive_description": null,
+    "memo": "",
+    "title": "そぼろ卵弁当",
+    "analysis": {
+      "is_bento": true,
+      "title": "そぼろ卵弁当",
+      "bento_bbox": {
+        "x0": 0.1,
+        "y0": 0.165,
+        "x1": 0.84,
+        "y1": 0.925
+      },
+      "dishes": [
+        {
+          "name": "肉そぼろ",
+          "note": "甘辛の牛そぼろ",
+          "x": 0.66,
+          "y": 0.4
+        },
+        {
+          "name": "いり卵",
+          "note": "パセリをふって",
+          "x": 0.36,
+          "y": 0.43
+        },
+        {
+          "name": "つくね",
+          "note": "ごまをトッピング",
+          "x": 0.36,
+          "y": 0.65
+        },
+        {
+          "name": "にんじんしりしり",
+          "note": "カップに詰めて",
+          "x": 0.65,
+          "y": 0.67
+        },
+        {
+          "name": "スイートポテト",
+          "note": "黒ごま添え",
+          "x": 0.42,
+          "y": 0.76
+        },
+        {
+          "name": "あんこパイ",
+          "note": "春巻きの皮で",
+          "x": 0.31,
+          "y": 0.82
+        },
+        {
+          "name": "ウインナー",
+          "x": 0.17,
+          "y": 0.77
+        }
+      ],
+      "main": "meat",
+      "tone": "brown",
+      "box": "曲げわっぱ風 小判型弁当箱",
+      "highlights": [
+        "ふわふわ黄色いいり卵が主役級の彩り",
+        "甘辛そぼろとの二色ご飯風",
+        "オレンジのにんじんが差し色",
+        "スイートポテトのデザート付き"
+      ],
+      "prep": {
+        "night": [
+          "肉そぼろ",
+          "にんじんしりしり",
+          "つくね"
+        ],
+        "morning": [
+          "いり卵",
+          "ウインナー"
+        ],
+        "stock": [
+          {
+            "name": "肉そぼろ",
+            "keep": "冷蔵2日 / 冷凍2週間"
+          },
+          {
+            "name": "つくね",
+            "keep": "冷蔵2日 / 冷凍2週間"
+          },
+          {
+            "name": "にんじんしりしり",
+            "keep": "冷蔵2日"
+          }
+        ],
+        "tip": "そぼろは前の晩に作って冷まし、朝はいり卵だけ焼けばOK。しっかり冷ましてから詰めましょう。"
+      }
+    },
+    "variant": {
+      "title_style": "kakko",
+      "pen": "thin",
+      "caption_length": "short",
+      "hashtag_count": 5
+    },
+    "caption": "そぼろ卵弁当\n☆肉そぼろ\n☆いり卵\n☆つくね\n☆にんじんしりしり\n☆スイートポテト\n☆あんこパイ\n☆ウインナー\n\nふわふわのいり卵と甘辛そぼろの二色ご飯にしたよ。今日も在宅おつかれさま、スイートポテトは午後のお楽しみにね🍠\n\n#在宅だんな弁当\n#わっぱ弁当\n#そぼろ弁当\n#いり卵\n#にんじんしりしり",
+    "image_urls": [
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-014500-16_U-yMq-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-014500-16_U-yMq-2.jpg"
+    ],
+    "error": null,
+    "issue_number": 5,
+    "status": "draft"
+  },
+  {
+    "drive_file_id": "1miL13_3h_IfEtgnzhxORjOldlnfVIxtF",
+    "drive_name": "IMG_1659.HEIC",
+    "drive_created": "2026-11-21T15:46:26.220Z",
+    "attempts": 1,
+    "drive_description": null,
+    "memo": "",
+    "title": "ケチャップオムレツ弁当",
+    "analysis": {
+      "is_bento": true,
+      "title": "ケチャップオムレツ弁当",
+      "bento_bbox": {
+        "x0": 0.12,
+        "y0": 0.15,
+        "x1": 0.81,
+        "y1": 0.83
+      },
+      "dishes": [
+        {
+          "name": "オムレツ",
+          "note": "ケチャップとパセリ",
+          "x": 0.55,
+          "y": 0.55
+        },
+        {
+          "name": "ほうれん草のごま和え",
+          "note": "",
+          "x": 0.58,
+          "y": 0.26
+        },
+        {
+          "name": "ちくわの磯辺揚げ",
+          "note": "",
+          "x": 0.21,
+          "y": 0.42
+        },
+        {
+          "name": "コロッケ",
+          "note": "",
+          "x": 0.28,
+          "y": 0.62
+        },
+        {
+          "name": "ポテトサラダ",
+          "note": "カップ入り",
+          "x": 0.43,
+          "y": 0.69
+        },
+        {
+          "name": "豆苗と油揚げ炒め",
+          "note": "",
+          "x": 0.56,
+          "y": 0.72
+        }
+      ],
+      "main": "egg",
+      "tone": "other",
+      "box": "小判型のお弁当箱（1段）",
+      "highlights": [
+        "ケチャップがけのふんわり大きなオムレツ",
+        "ほうれん草と豆苗の緑がアクセント",
+        "揚げ物もポテサラも入ってボリューム満点"
+      ],
+      "prep": {
+        "night": [
+          "ほうれん草のごま和え",
+          "ポテトサラダ",
+          "豆苗と油揚げ炒め"
+        ],
+        "morning": [
+          "オムレツ",
+          "ちくわの磯辺揚げ",
+          "コロッケ"
+        ],
+        "stock": [
+          {
+            "name": "ほうれん草のごま和え",
+            "keep": "冷蔵2日"
+          },
+          {
+            "name": "ポテトサラダ",
+            "keep": "冷蔵1日"
+          }
+        ],
+        "tip": "副菜は前の晩に済ませ、朝はオムレツだけ焼けばOK。ポテサラはカップに入れて他のおかずと分けましょう。"
+      }
+    },
+    "variant": {
+      "title_style": "date",
+      "pen": "marker",
+      "caption_length": "short",
+      "hashtag_count": 5
+    },
+    "caption": "ケチャップオムレツ弁当\n☆オムレツ\n☆ほうれん草のごま和え\n☆ちくわの磯辺揚げ\n☆コロッケ\n☆ポテトサラダ\n☆豆苗と油揚げ炒め\n\nふんわり大きなオムレツにケチャップをたっぷりかけたよ🍅 今日も在宅おつかれさま、揚げ物もポテサラもあるから午後もがんばってね\n\n#在宅だんな弁当\n#わっぱ弁当\n#オムレツ弁当\n#ケチャップオムレツ\n#ポテトサラダ",
+    "image_urls": [
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-014517-1miL13_3-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-014517-1miL13_3-2.jpg"
+    ],
+    "error": null,
+    "issue_number": 6,
+    "status": "draft"
   }
 ]
