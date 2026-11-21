@@ -99,5 +99,313 @@
     ],
     "scheduled_at": null,
     "followers_at_post": 0
+  },
+  {
+    "drive_file_id": "1wYcuUJGblFjgyPnXUhjVkFz6Ai-MlIjF",
+    "drive_name": "IMG_1754.HEIC",
+    "drive_created": "2026-11-21T06:51:41.187Z",
+    "attempts": 1,
+    "drive_description": null,
+    "memo": "",
+    "title": "エビマヨ弁当",
+    "analysis": {
+      "is_bento": true,
+      "title": "エビマヨ弁当",
+      "bento_bbox": {
+        "x0": 0.13,
+        "y0": 0.18,
+        "x1": 0.82,
+        "y1": 0.88
+      },
+      "dishes": [
+        {
+          "name": "炊き込みご飯",
+          "note": "しょうゆ味のご飯",
+          "x": 0.48,
+          "y": 0.3
+        },
+        {
+          "name": "エビマヨ",
+          "note": "パセリ&青のり",
+          "x": 0.47,
+          "y": 0.455
+        },
+        {
+          "name": "だし巻き卵",
+          "note": "ネギ入り",
+          "x": 0.34,
+          "y": 0.62
+        },
+        {
+          "name": "肉巻きピーマン",
+          "note": "甘辛だれ",
+          "x": 0.6,
+          "y": 0.6
+        },
+        {
+          "name": "にんじんしりしり",
+          "note": "ごま入り",
+          "x": 0.33,
+          "y": 0.77
+        },
+        {
+          "name": "さつまいも",
+          "note": "黒ごま",
+          "x": 0.5,
+          "y": 0.77
+        },
+        {
+          "name": "あんこ天ぷら",
+          "note": "さつまいもあん",
+          "x": 0.64,
+          "y": 0.74
+        }
+      ],
+      "main": "fish",
+      "tone": "brown",
+      "box": "曲げわっぱ風 一段弁当",
+      "highlights": [
+        "ぷりぷりエビマヨのオレンジ色",
+        "ふんわり厚焼きのだし巻き卵",
+        "にんじんの鮮やかな彩り",
+        "ご飯とおかずがぎっしり"
+      ],
+      "prep": {
+        "night": [
+          "にんじんしりしり",
+          "さつまいもの甘煮"
+        ],
+        "morning": [
+          "エビマヨ",
+          "だし巻き卵",
+          "肉巻きピーマン"
+        ],
+        "stock": [
+          {
+            "name": "にんじんしりしり",
+            "keep": "冷蔵2日"
+          },
+          {
+            "name": "さつまいもの甘煮",
+            "keep": "冷蔵2日"
+          }
+        ],
+        "tip": "副菜は前の晩に作って冷ましておき、朝は焼く・和えるだけにすると時短になります。"
+      }
+    },
+    "variant": {
+      "title_style": "plain",
+      "pen": "marker",
+      "caption_length": "short",
+      "hashtag_count": 3
+    },
+    "caption": "エビマヨ弁当\n☆炊き込みご飯\n☆エビマヨ\n☆だし巻き卵\n☆肉巻きピーマン\n☆にんじんしりしり\n☆さつまいも\n☆あんこ天ぷら\n\nぷりぷりエビマヨとふんわりだし巻き、にんじんの彩りもぎっしり詰めたよ。今日も在宅おつかれさま、午後もがんばってね🍤\n\n#在宅だんな弁当\n#わっぱ弁当\n#エビマヨ弁当",
+    "image_urls": [
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013109-1wYcuUJG-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013109-1wYcuUJG-2.jpg"
+    ],
+    "error": null,
+    "issue_number": 2,
+    "status": "draft"
+  },
+  {
+    "drive_file_id": "1WN_GNFxRidRWPXoz24ecuV7lZcTvirR9",
+    "drive_name": "IMG_1726.HEIC",
+    "drive_created": "2026-11-21T15:10:48.582Z",
+    "attempts": 1,
+    "drive_description": null,
+    "memo": "",
+    "title": "鶏の唐揚げ弁当",
+    "analysis": {
+      "is_bento": true,
+      "title": "鶏の唐揚げ弁当",
+      "bento_bbox": {
+        "x0": 0.21,
+        "y0": 0.22,
+        "x1": 0.82,
+        "y1": 0.83
+      },
+      "dishes": [
+        {
+          "name": "炊き込みご飯",
+          "note": "ひじき入り",
+          "x": 0.52,
+          "y": 0.37
+        },
+        {
+          "name": "鶏の唐揚げ",
+          "note": "もも肉のから揚げ",
+          "x": 0.68,
+          "y": 0.6
+        },
+        {
+          "name": "卵焼き",
+          "note": "だし巻き風",
+          "x": 0.35,
+          "y": 0.54
+        },
+        {
+          "name": "にんじんラペ",
+          "x": 0.5,
+          "y": 0.67
+        },
+        {
+          "name": "大学芋風さつまいも",
+          "note": "黒ごま入り",
+          "x": 0.29,
+          "y": 0.7
+        }
+      ],
+      "main": "meat",
+      "tone": "brown",
+      "box": "曲げわっぱ風 1段",
+      "highlights": [
+        "ごろっと大きな唐揚げ",
+        "ふんわり重ねた卵焼き",
+        "にんじんの鮮やかなオレンジ",
+        "黒ごまをまとったさつまいも"
+      ],
+      "prep": {
+        "night": [
+          "にんじんラペ",
+          "さつまいもの甘辛煮",
+          "唐揚げの下味つけ"
+        ],
+        "morning": [
+          "唐揚げ",
+          "卵焼き",
+          "炊き込みご飯を詰める"
+        ],
+        "stock": [
+          {
+            "name": "にんじんラペ",
+            "keep": "冷蔵3日"
+          },
+          {
+            "name": "さつまいもの甘辛煮",
+            "keep": "冷蔵2日"
+          },
+          {
+            "name": "唐揚げ(下味冷凍)",
+            "keep": "冷凍2週間"
+          }
+        ],
+        "tip": "唐揚げは前夜に下味をつけて冷蔵、朝は揚げるだけ。ラペはカップに入れて汁気を切ると詰めやすいです。"
+      }
+    },
+    "variant": {
+      "title_style": "plain",
+      "pen": "marker",
+      "caption_length": "long",
+      "hashtag_count": 3
+    },
+    "caption": "鶏の唐揚げ弁当\n☆炊き込みご飯\n☆鶏の唐揚げ\n☆卵焼き\n☆にんじんラペ\n☆大学芋風さつまいも\n\n今日も在宅おつかれさま😊 ごろっと大きな唐揚げをメインに、炊き込みご飯と卵焼きを詰めたよ。卵焼きはふんわり重ねて、にんじんラペのオレンジを隣に置くと彩りがぱっと明るくなるよ。黒ごまをまとった大学芋風のさつまいもは、午後のひと休みにもぴったり。午後も無理せずがんばってね🍙\n\n#在宅だんな弁当\n#わっぱ弁当\n#唐揚げ弁当",
+    "image_urls": [
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013132-1WN_GNFx-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013132-1WN_GNFx-2.jpg"
+    ],
+    "error": null,
+    "issue_number": 3,
+    "status": "draft"
+  },
+  {
+    "drive_file_id": "17RLvjIaw16XDOPAYrRrlnE89gUV_dmyi",
+    "drive_name": "IMG_1652.HEIC",
+    "drive_created": "2026-11-21T15:10:52.023Z",
+    "attempts": 1,
+    "drive_description": null,
+    "memo": "",
+    "title": "豚の生姜焼き弁当",
+    "analysis": {
+      "is_bento": true,
+      "title": "豚の生姜焼き弁当",
+      "bento_bbox": {
+        "x0": 0.25,
+        "y0": 0.3,
+        "x1": 0.79,
+        "y1": 0.82
+      },
+      "dishes": [
+        {
+          "name": "豚の生姜焼き",
+          "note": "玉ねぎとごまのせ",
+          "x": 0.52,
+          "y": 0.43
+        },
+        {
+          "name": "ご飯",
+          "note": "生姜焼きの下に敷き詰め",
+          "x": 0.65,
+          "y": 0.51
+        },
+        {
+          "name": "卵焼き",
+          "x": 0.41,
+          "y": 0.59
+        },
+        {
+          "name": "ツナサラダ",
+          "note": "白菜と青菜入り",
+          "x": 0.41,
+          "y": 0.68
+        },
+        {
+          "name": "きんぴら風炒め",
+          "note": "さつまいも？",
+          "x": 0.63,
+          "y": 0.64
+        },
+        {
+          "name": "にんじんラペ",
+          "x": 0.58,
+          "y": 0.73
+        }
+      ],
+      "main": "meat",
+      "tone": "brown",
+      "box": "曲げわっぱ風 小判型の1段弁当箱",
+      "highlights": [
+        "ご飯の上にたっぷりのせた豚の生姜焼きと玉ねぎ",
+        "ふんわり黄色い卵焼き",
+        "にんじんラペの鮮やかなオレンジ",
+        "ごまをふって香ばしく"
+      ],
+      "prep": {
+        "night": [
+          "にんじんラペ",
+          "ツナサラダ",
+          "卵焼き"
+        ],
+        "morning": [
+          "豚の生姜焼き",
+          "ご飯"
+        ],
+        "stock": [
+          {
+            "name": "にんじんラペ",
+            "keep": "冷蔵3日"
+          },
+          {
+            "name": "さつまいものきんぴら",
+            "keep": "冷蔵2日"
+          }
+        ],
+        "tip": "生姜焼きは朝に焼いて冷ましてからご飯にのせると傷みにくいです。おかずはカップで仕切ると味移りも防げます。"
+      }
+    },
+    "variant": {
+      "title_style": "plain",
+      "pen": "marker",
+      "caption_length": "long",
+      "hashtag_count": 5
+    },
+    "caption": "豚の生姜焼き弁当\n☆豚の生姜焼き\n☆ご飯\n☆卵焼き\n☆ツナサラダ\n☆きんぴら風炒め\n☆にんじんラペ\n\n今日は豚の生姜焼きをご飯の上にたっぷりのせた、ボリューム弁当だよ🍚 玉ねぎも一緒に炒めて、タレをよくからめるとご飯になじんでおいしいの。卵焼きの黄色とにんじんラペのオレンジで、わっぱの中がパッと明るくなるように詰めてみました。今日も在宅おつかれさま、午後もゆるっとがんばってね😊\n\n#在宅だんな弁当\n#わっぱ弁当\n#豚の生姜焼き\n#卵焼き\n#にんじんラペ",
+    "image_urls": [
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013151-17RLvjIa-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013151-17RLvjIa-2.jpg"
+    ],
+    "error": null,
+    "issue_number": 4,
+    "status": "draft"
   }
 ]
