@@ -148,8 +148,18 @@ ALLOWED = {"OWNER", "MEMBER", "COLLABORATOR"}
 RETRY_MARK = "<!-- retry -->"   # この印のついた返事は「対応済み」に数えない（あとで自動でやり直す）
 
 
+def _is_retry(body: str) -> bool:
+    return RETRY_MARK in body or body.lstrip().startswith("⚠️")
+
+
 def error_comment(number: int, e: Exception) -> None:
     msg = str(e)
+    try:   # 同じエラーの案内を何度も書かない
+        last = gh.list_comments(number)[-1]
+        if last["user"]["login"] == "github-actions[bot]" and _is_retry(last["body"]):
+            return
+    except Exception:  # noqa: BLE001
+        pass
     if "credit balance is too low" in msg:
         head = "⚠️ Claude API のクレジットが足りず、コメントを読み取れませんでした。チャージされたら自動で対応し直します（コメントし直さなくて大丈夫です）。"
     else:
@@ -162,7 +172,7 @@ def pending_text(number: int) -> str:
     続けてコメントすると GitHub が途中の実行を取り消すことがあるので、取りこぼさないよう全部読む。"""
     comments = gh.list_comments(number)
     last_bot = max((i for i, c in enumerate(comments)
-                    if c["user"]["login"] == "github-actions[bot]" and RETRY_MARK not in c["body"]), default=-1)
+                    if c["user"]["login"] == "github-actions[bot]" and not _is_retry(c["body"])), default=-1)
     texts = [c["body"].strip() for c in comments[last_bot + 1:]
              if c.get("author_association") in ALLOWED and c["user"]["type"] != "Bot" and c["body"].strip()]
     return unicodedata.normalize("NFKC", "\n\n".join(texts)).strip()
