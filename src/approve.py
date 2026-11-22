@@ -158,12 +158,27 @@ def pending_text(number: int) -> str:
 
 
 def main():
-    number = int(env("ISSUE_NUMBER", required=True))
+    handle(int(env("ISSUE_NUMBER", required=True)), unicodedata.normalize("NFKC", env("COMMENT_BODY", "")).strip())
+
+
+def sweep() -> None:
+    """返事をしていないコメントが残っている下書きを、まとめて見直して対応する（定期実行から呼ばれる）。"""
+    for rec in load_json(POSTS_FILE, []):
+        if rec.get("status") in ("draft", "scheduled") and rec.get("issue_number"):
+            try:
+                if pending_text(rec["issue_number"]):
+                    print(f"#{rec['issue_number']} に未対応のコメントがあるので対応します")
+                    handle(rec["issue_number"])
+            except Exception:  # noqa: BLE001  1件の失敗で他を止めない
+                traceback.print_exc()
+
+
+def handle(number: int, fallback_text: str = "") -> None:
     try:
         text = pending_text(number)
     except Exception:  # noqa: BLE001  一覧が取れないときはこのコメントだけ処理
         traceback.print_exc()
-        text = unicodedata.normalize("NFKC", env("COMMENT_BODY", "")).strip()
+        text = fallback_text
     if not text:
         print("未処理のコメントはありません（前の実行で対応済み）")
         return

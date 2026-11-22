@@ -292,6 +292,8 @@ def main():
     posts = load_json(POSTS_FILE, [])
     publish_due(posts, cfg)
     failed = prepare_drafts(posts, cfg, strategy)
+    import approve
+    approve.sweep()          # 返事をしていないコメントが残っていれば対応する
     if failed:
         sys.exit(f"{failed} 枚の処理に失敗しました（上のエラーを確認）")
 
