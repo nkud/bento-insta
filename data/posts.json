@@ -424,9 +424,9 @@
     "drive_file_id": "16_U-yMqAqWTtqvvYDBnHNWYHVkbBNIRy",
     "drive_name": "IMG_1758.HEIC",
     "drive_created": "2026-11-21T15:10:54.790Z",
-    "attempts": 1,
+    "attempts": 2,
     "drive_description": null,
-    "memo": "",
+    "memo": "おかず名の訂正：「つくね」ではなく「ピーマンの肉詰め」。",
     "title": "そぼろ卵弁当",
     "analysis": {
       "is_bento": true,
@@ -439,65 +439,67 @@
       },
       "dishes": [
         {
+          "name": "炒り卵",
+          "x": 0.34,
+          "y": 0.4,
+          "note": "パセリ添え"
+        },
+        {
           "name": "肉そぼろ",
-          "note": "甘辛の牛そぼろ",
-          "x": 0.66,
-          "y": 0.4
-        },
-        {
-          "name": "いり卵",
-          "note": "パセリをふって",
-          "x": 0.36,
-          "y": 0.43
-        },
-        {
-          "name": "つくね",
-          "note": "ごまをトッピング",
-          "x": 0.36,
-          "y": 0.65
-        },
-        {
-          "name": "にんじんしりしり",
-          "note": "カップに詰めて",
           "x": 0.65,
-          "y": 0.67
+          "y": 0.38,
+          "note": "甘辛味"
         },
         {
-          "name": "スイートポテト",
-          "note": "黒ごま添え",
-          "x": 0.42,
-          "y": 0.76
+          "name": "ピーマンの肉詰め",
+          "x": 0.37,
+          "y": 0.64,
+          "note": "ごま付きの照り焼き"
         },
         {
-          "name": "あんこパイ",
-          "note": "春巻きの皮で",
-          "x": 0.31,
-          "y": 0.82
+          "name": "にんじんラペ",
+          "x": 0.65,
+          "y": 0.67,
+          "note": "細切りにんじん"
         },
         {
           "name": "ウインナー",
-          "x": 0.17,
+          "x": 0.23,
           "y": 0.77
+        },
+        {
+          "name": "大学芋風さつまいも",
+          "x": 0.43,
+          "y": 0.75,
+          "note": "黒ごま付き"
+        },
+        {
+          "name": "春巻き",
+          "x": 0.42,
+          "y": 0.82,
+          "note": "あんこ入り"
         }
       ],
       "main": "meat",
       "tone": "brown",
-      "box": "曲げわっぱ風 小判型弁当箱",
+      "box": "曲げわっぱ風の小判型",
       "highlights": [
-        "ふわふわ黄色いいり卵が主役級の彩り",
-        "甘辛そぼろとの二色ご飯風",
-        "オレンジのにんじんが差し色",
-        "スイートポテトのデザート付き"
+        "ふわふわ黄色い炒り卵が主役級",
+        "肉そぼろと卵の二色ごはん風",
+        "にんじんのオレンジで彩りアップ",
+        "ピーマンの肉詰めでボリューム満点"
       ],
       "prep": {
         "night": [
           "肉そぼろ",
-          "にんじんしりしり",
-          "つくね"
+          "にんじんラペ",
+          "ピーマンの肉詰め（焼く前まで）"
         ],
         "morning": [
-          "いり卵",
-          "ウインナー"
+          "炒り卵",
+          "ピーマンの肉詰めを焼く",
+          "ウインナー",
+          "さつまいも"
         ],
         "stock": [
           {
@@ -505,31 +507,28 @@
             "keep": "冷蔵2日 / 冷凍2週間"
           },
           {
-            "name": "つくね",
-            "keep": "冷蔵2日 / 冷凍2週間"
-          },
-          {
-            "name": "にんじんしりしり",
+            "name": "にんじんラペ",
             "keep": "冷蔵2日"
           }
         ],
-        "tip": "そぼろは前の晩に作って冷まし、朝はいり卵だけ焼けばOK。しっかり冷ましてから詰めましょう。"
+        "tip": "そぼろは前の晩に作り置き。炒り卵は朝に焼き、しっかり冷ましてから詰めると傷みにくいです。"
       }
     },
     "variant": {
       "title_style": "kakko",
       "pen": "thin",
       "caption_length": "short",
-      "hashtag_count": 5
+      "hashtag_count": 3
     },
-    "caption": "そぼろ卵弁当\n☆肉そぼろ\n☆いり卵\n☆つくね\n☆にんじんしりしり\n☆スイートポテト\n☆あんこパイ\n☆ウインナー\n\nふわふわのいり卵と甘辛そぼろの二色ご飯にしたよ。今日も在宅おつかれさま、スイートポテトは午後のお楽しみにね🍠\n\n#在宅だんな弁当\n#わっぱ弁当\n#そぼろ弁当\n#いり卵\n#にんじんしりしり",
+    "caption": "そぼろ卵弁当\n☆炒り卵\n☆肉そぼろ\n☆ピーマンの肉詰め\n☆にんじんラペ\n☆ウインナー\n☆大学芋風さつまいも\n☆春巻き\n\n今日も在宅おつかれさま🍳 ふわふわ炒り卵と肉そぼろの二色ごはんに、つくねじゃなくてピーマンの肉詰めもぎゅっと詰めたよ\n\n#在宅だんな弁当\n#わっぱ弁当\n#そぼろ卵弁当",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-014500-16_U-yMq-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-014500-16_U-yMq-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-111940-16_U-yMq-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-111940-16_U-yMq-2.jpg"
     ],
     "error": null,
     "issue_number": 5,
-    "status": "draft"
+    "status": "draft",
+    "scheduled_at": null
   },
   {
     "drive_file_id": "1miL13_3h_IfEtgnzhxORjOldlnfVIxtF",
