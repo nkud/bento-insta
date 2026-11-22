@@ -116,9 +116,9 @@
     "drive_file_id": "1wYcuUJGblFjgyPnXUhjVkFz6Ai-MlIjF",
     "drive_name": "IMG_1754.HEIC",
     "drive_created": "2026-11-21T06:51:41.187Z",
-    "attempts": 1,
+    "attempts": 2,
     "drive_description": null,
-    "memo": "",
+    "memo": "おかず名の訂正：じゅーしー（炊き込みご飯ではなく）、エビマヨ、だし巻き卵、ピーマンの肉詰め（肉巻きピーマンではなく）、にんじんのラペ（にんじんしりしりではなく）、大学芋（さつまいもではなく）、春巻きあんこ（あんこ天ぷらではなく）。ハッシュタグは #在宅だんな弁当 #旦那弁当 #わっぱ弁当 #エビマヨ弁当 #お弁当記録 の5個。キャプションの本文は「ぷりぷりエビマヨとふんわりだし巻き、にんじんの彩りもぎっしり詰めたよ。今日も在宅おつかれさま、午後もがんばってね🍤」のまま。",
     "title": "エビマヨ弁当",
     "analysis": {
       "is_bento": true,
@@ -131,94 +131,94 @@
       },
       "dishes": [
         {
-          "name": "炊き込みご飯",
-          "note": "しょうゆ味のご飯",
+          "name": "じゅーしー",
+          "note": "沖縄風の混ぜご飯",
           "x": 0.48,
-          "y": 0.3
+          "y": 0.31
         },
         {
           "name": "エビマヨ",
-          "note": "パセリ&青のり",
+          "note": "パセリ風味",
           "x": 0.47,
-          "y": 0.455
+          "y": 0.47
         },
         {
           "name": "だし巻き卵",
-          "note": "ネギ入り",
+          "note": "2切れ",
           "x": 0.34,
-          "y": 0.62
+          "y": 0.64
         },
         {
-          "name": "肉巻きピーマン",
-          "note": "甘辛だれ",
+          "name": "ピーマンの肉詰め",
           "x": 0.6,
           "y": 0.6
         },
         {
-          "name": "にんじんしりしり",
+          "name": "にんじんのラペ",
           "note": "ごま入り",
           "x": 0.33,
           "y": 0.77
         },
         {
-          "name": "さつまいも",
-          "note": "黒ごま",
+          "name": "大学芋",
+          "note": "黒ごま添え",
           "x": 0.5,
-          "y": 0.77
+          "y": 0.76
         },
         {
-          "name": "あんこ天ぷら",
-          "note": "さつまいもあん",
-          "x": 0.64,
-          "y": 0.74
+          "name": "春巻きあんこ",
+          "x": 0.66,
+          "y": 0.73
         }
       ],
       "main": "fish",
       "tone": "brown",
-      "box": "曲げわっぱ風 一段弁当",
+      "box": "曲げわっぱ",
       "highlights": [
-        "ぷりぷりエビマヨのオレンジ色",
-        "ふんわり厚焼きのだし巻き卵",
-        "にんじんの鮮やかな彩り",
-        "ご飯とおかずがぎっしり"
+        "ぷりぷりのエビマヨ",
+        "ふんわりだし巻き卵",
+        "にんじんのラペの彩り",
+        "大学芋と春巻きあんこのデザートおかず"
       ],
       "prep": {
         "night": [
-          "にんじんしりしり",
-          "さつまいもの甘煮"
+          "にんじんのラペ",
+          "大学芋",
+          "ピーマンの肉詰め"
         ],
         "morning": [
           "エビマヨ",
           "だし巻き卵",
-          "肉巻きピーマン"
+          "春巻きあんこ"
         ],
         "stock": [
           {
-            "name": "にんじんしりしり",
-            "keep": "冷蔵2日"
+            "name": "にんじんのラペ",
+            "keep": "冷蔵3日"
           },
           {
-            "name": "さつまいもの甘煮",
-            "keep": "冷蔵2日"
+            "name": "ピーマンの肉詰め",
+            "keep": "冷凍2週間"
           }
         ],
-        "tip": "副菜は前の晩に作って冷ましておき、朝は焼く・和えるだけにすると時短になります。"
+        "tip": "ラペと大学芋は前の晩に仕込み、朝はエビマヨと卵焼きだけ作れば時短になります。"
       }
     },
     "variant": {
       "title_style": "plain",
-      "pen": "marker",
-      "caption_length": "short",
-      "hashtag_count": 3
+      "pen": "thin",
+      "caption_length": "long",
+      "hashtag_count": 5
     },
-    "caption": "エビマヨ弁当\n☆炊き込みご飯\n☆エビマヨ\n☆だし巻き卵\n☆肉巻きピーマン\n☆にんじんしりしり\n☆さつまいも\n☆あんこ天ぷら\n\nぷりぷりエビマヨとふんわりだし巻き、にんじんの彩りもぎっしり詰めたよ。今日も在宅おつかれさま、午後もがんばってね🍤\n\n#在宅だんな弁当\n#わっぱ弁当\n#エビマヨ弁当",
+    "caption": "エビマヨ弁当\n☆じゅーしー\n☆エビマヨ\n☆だし巻き卵\n☆ピーマンの肉詰め\n☆にんじんのラペ\n☆大学芋\n☆春巻きあんこ\n\nぷりぷりエビマヨとふんわりだし巻き、にんじんの彩りもぎっしり詰めたよ。今日も在宅おつかれさま、午後もがんばってね🍤\n\n#在宅だんな弁当\n#わっぱ弁当\n#旦那弁当\n#エビマヨ弁当\n#お弁当記録",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013109-1wYcuUJG-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013109-1wYcuUJG-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113531-1wYcuUJG-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113531-1wYcuUJG-2.jpg"
     ],
     "error": null,
     "issue_number": 2,
-    "status": "draft"
+    "status": "draft",
+    "scheduled_at": null
   },
   {
     "drive_file_id": "1WN_GNFxRidRWPXoz24ecuV7lZcTvirR9",
