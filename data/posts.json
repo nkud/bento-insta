@@ -324,73 +324,65 @@
     "drive_file_id": "17RLvjIaw16XDOPAYrRrlnE89gUV_dmyi",
     "drive_name": "IMG_1652.HEIC",
     "drive_created": "2026-11-21T15:10:52.023Z",
-    "attempts": 1,
+    "attempts": 2,
     "drive_description": null,
-    "memo": "",
+    "memo": "おかず名の訂正：豚の生姜焼き、卵焼き、エビ、大学芋、にんじんラペ（ご飯・ツナサラダ・きんぴら風炒めは入れない）。本文は今の文章をできるだけ活かす。ハッシュタグは「#旦那弁当」「#お弁当記録」を足したい意向だが、5個までに収める。",
     "title": "豚の生姜焼き弁当",
     "analysis": {
       "is_bento": true,
       "title": "豚の生姜焼き弁当",
       "bento_bbox": {
         "x0": 0.25,
-        "y0": 0.3,
+        "y0": 0.295,
         "x1": 0.79,
-        "y1": 0.82
+        "y1": 0.815
       },
       "dishes": [
         {
           "name": "豚の生姜焼き",
-          "note": "玉ねぎとごまのせ",
-          "x": 0.52,
-          "y": 0.43
-        },
-        {
-          "name": "ご飯",
-          "note": "生姜焼きの下に敷き詰め",
-          "x": 0.65,
-          "y": 0.51
+          "note": "玉ねぎ入り・ごま",
+          "x": 0.5,
+          "y": 0.42
         },
         {
           "name": "卵焼き",
-          "x": 0.41,
+          "x": 0.4,
           "y": 0.59
         },
         {
-          "name": "ツナサラダ",
-          "note": "白菜と青菜入り",
-          "x": 0.41,
-          "y": 0.68
+          "name": "エビ",
+          "x": 0.62,
+          "y": 0.585
         },
         {
-          "name": "きんぴら風炒め",
-          "note": "さつまいも？",
-          "x": 0.63,
-          "y": 0.64
+          "name": "大学芋",
+          "x": 0.64,
+          "y": 0.65
         },
         {
           "name": "にんじんラペ",
           "x": 0.58,
-          "y": 0.73
+          "y": 0.72
         }
       ],
       "main": "meat",
       "tone": "brown",
-      "box": "曲げわっぱ風 小判型の1段弁当箱",
+      "box": "曲げわっぱ風の小判型弁当箱",
       "highlights": [
-        "ご飯の上にたっぷりのせた豚の生姜焼きと玉ねぎ",
+        "ご飯の上にどんと乗った豚の生姜焼き",
         "ふんわり黄色い卵焼き",
-        "にんじんラペの鮮やかなオレンジ",
-        "ごまをふって香ばしく"
+        "にんじんラペのオレンジで彩りアップ",
+        "ごまをかけた甘辛玉ねぎ"
       ],
       "prep": {
         "night": [
           "にんじんラペ",
-          "ツナサラダ",
-          "卵焼き"
+          "大学芋"
         ],
         "morning": [
           "豚の生姜焼き",
-          "ご飯"
+          "卵焼き",
+          "エビ"
         ],
         "stock": [
           {
@@ -398,27 +390,28 @@
             "keep": "冷蔵3日"
           },
           {
-            "name": "さつまいものきんぴら",
+            "name": "大学芋",
             "keep": "冷蔵2日"
           }
         ],
-        "tip": "生姜焼きは朝に焼いて冷ましてからご飯にのせると傷みにくいです。おかずはカップで仕切ると味移りも防げます。"
+        "tip": "にんじんラペは前の晩に作って味をなじませ、朝は生姜焼きと卵焼きを焼いて詰めるだけにすると楽です。"
       }
     },
     "variant": {
-      "title_style": "plain",
-      "pen": "marker",
-      "caption_length": "long",
+      "title_style": "\"\"",
+      "pen": "\"\"",
+      "caption_length": "short",
       "hashtag_count": 5
     },
-    "caption": "豚の生姜焼き弁当\n☆豚の生姜焼き\n☆ご飯\n☆卵焼き\n☆ツナサラダ\n☆きんぴら風炒め\n☆にんじんラペ\n\n今日は豚の生姜焼きをご飯の上にたっぷりのせた、ボリューム弁当だよ🍚 玉ねぎも一緒に炒めて、タレをよくからめるとご飯になじんでおいしいの。卵焼きの黄色とにんじんラペのオレンジで、わっぱの中がパッと明るくなるように詰めてみました。今日も在宅おつかれさま、午後もゆるっとがんばってね😊\n\n#在宅だんな弁当\n#わっぱ弁当\n#豚の生姜焼き\n#卵焼き\n#にんじんラペ",
+    "caption": "豚の生姜焼き弁当\n☆豚の生姜焼き\n☆卵焼き\n☆エビ\n☆大学芋\n☆にんじんラペ\n\n今日も在宅おつかれさま。どんと豚の生姜焼きに、ふんわり卵焼きとにんじんラペのオレンジで彩りよく詰めたよ🍱\n\n#在宅だんな弁当\n#わっぱ弁当\n#旦那弁当\n#お弁当記録\n#豚の生姜焼き",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013151-17RLvjIa-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-013151-17RLvjIa-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-112116-17RLvjIa-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-112116-17RLvjIa-2.jpg"
     ],
     "error": null,
     "issue_number": 4,
-    "status": "draft"
+    "status": "draft",
+    "scheduled_at": null
   },
   {
     "drive_file_id": "16_U-yMqAqWTtqvvYDBnHNWYHVkbBNIRy",
