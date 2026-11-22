@@ -23,6 +23,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: main            # イベント発生時点ではなく、実行時点の最新の記録を使う
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -58,5 +60,8 @@ jobs:
           git add data/ docs/ 2>/dev/null || git add data/
           if ! git diff --cached --quiet; then
             git commit -m "metrics: 反応を集計"
-            git pull --rebase && git push
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push origin HEAD:main && break
+              sleep 5
+            done
           fi

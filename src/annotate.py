@@ -196,24 +196,9 @@ GAP = 26
 
 
 def _resolve(items, W, H, title_bottom, bento_px):
-    """同じ辺に並ぶラベル同士が重ならないよう押し広げる。"""
+    """同じ辺に並ぶラベル同士が重ならないよう押し広げる。上下の段を先に決め、左右の列はその間に収める。"""
     bx0, by0, bx1, by1 = bento_px
-    for side in "LR":
-        col = sorted([i for i in items if i["side"] == side], key=lambda i: i["py"])
-        for i in col:
-            if side == "L":
-                i["cx"] = max(bx0 - 24 - i["w"] / 2, i["w"] / 2 + 28)
-            else:
-                i["cx"] = min(bx1 + 24 + i["w"] / 2, W - i["w"] / 2 - 28)
-            i["cy"] = i["py"]
-        y = title_bottom + 10
-        for i in col:
-            i["cy"] = max(i["cy"], y + i["h"] / 2)
-            y = i["cy"] + i["h"] / 2 + GAP
-        y = H - 30
-        for i in reversed(col):
-            i["cy"] = min(i["cy"], y - i["h"] / 2)
-            y = i["cy"] - i["h"] / 2 - GAP
+    top_lim, bot_lim = title_bottom + 10, H - 30
     for side in "TB":
         row = sorted([i for i in items if i["side"] == side], key=lambda i: i["px"])
         for i in row:
@@ -230,6 +215,26 @@ def _resolve(items, W, H, title_bottom, bento_px):
         for i in reversed(row):
             i["cx"] = min(i["cx"], x - i["w"] / 2)
             x = i["cx"] - i["w"] / 2 - 34
+        if row and side == "T":
+            top_lim = max(top_lim, max(i["cy"] + i["h"] / 2 for i in row) + GAP)
+        if row and side == "B":
+            bot_lim = min(bot_lim, min(i["cy"] - i["h"] / 2 for i in row) - GAP)
+    for side in "LR":
+        col = sorted([i for i in items if i["side"] == side], key=lambda i: i["py"])
+        for i in col:
+            if side == "L":
+                i["cx"] = max(bx0 - 24 - i["w"] / 2, i["w"] / 2 + 28)
+            else:
+                i["cx"] = min(bx1 + 24 + i["w"] / 2, W - i["w"] / 2 - 28)
+            i["cy"] = i["py"]
+        y = top_lim
+        for i in col:
+            i["cy"] = max(i["cy"], y + i["h"] / 2)
+            y = i["cy"] + i["h"] / 2 + GAP
+        y = bot_lim
+        for i in reversed(col):
+            i["cy"] = min(i["cy"], y - i["h"] / 2)
+            y = i["cy"] - i["h"] / 2 - GAP
 
 
 def _assign(items, bento_px, W, H, title_bottom):
@@ -251,10 +256,15 @@ def _assign(items, bento_px, W, H, title_bottom):
         need = h + GAP if s in "LR" else w + 34
         return room[s] >= size and used[s] + need <= cap[s]
 
-    for i in sorted(items, key=lambda i: min(dist(i, s) for s in room)):
-        sides = sorted(room, key=lambda s: dist(i, s))
+    # 置き場所の指定（place: T/B/L/R）があるものを先に決める
+    order = sorted(items, key=lambda i: (i.get("place") not in room, min(dist(i, s) for s in room)))
+    for i in order:
+        want = i.get("place") if i.get("place") in room else None
+        sides = [want] if want else sorted(room, key=lambda s: dist(i, s))
         choice = next(((s, False) for s in sides if fits(i, s, False)), None) \
             or next(((s, True) for s in sides if s in "LR" and i["can_vert"] and fits(i, s, True)), None)
+        if not choice and want:                    # 指定の場所に入らなくても、そこに重ねて置く
+            choice = (want, False)
         if choice:
             i["side"], i["vertical"] = choice
             i["inside"] = False
@@ -266,8 +276,10 @@ def _assign(items, bento_px, W, H, title_bottom):
 
 
 def render(img: Image.Image, title: str, dishes_px: list[dict], bento_px: tuple,
-           variant: dict, date=None, seed: int = 0) -> Image.Image:
-    """dishes_px: [{name, note, px, py}]（出力画像のピクセル座標）"""
+           variant: dict, date=None, seed: int = 0, show_notes: bool = False,
+           uniform_ink: bool = True) -> Image.Image:
+    """dishes_px: [{name, note, px, py, place?}]（出力画像のピクセル座標）
+    show_notes: おかず名の下に（補足）を書くか / uniform_ink: 文字色を全部白にそろえるか"""
     rng = random.Random(seed)
     W, H = img.size
     base = img.convert("RGBA")
@@ -290,7 +302,7 @@ def render(img: Image.Image, title: str, dishes_px: list[dict], bento_px: tuple,
         name = d["name"]
         h_lines = _wrap(name, 6)
         hw, hh = _measure(h_lines, f_label)
-        note = f"({d['note']})" if d.get("note") else ""
+        note = f"({d['note']})" if d.get("note") and show_notes else ""
         n_lines = _wrap(note, 8) if note else []
         if n_lines:
             nw, nh = _measure(n_lines, f_note)
@@ -309,14 +321,14 @@ def render(img: Image.Image, title: str, dishes_px: list[dict], bento_px: tuple,
     layers = {WHITE: Image.new("RGBA", base.size, (0, 0, 0, 0)),
               DARK: Image.new("RGBA", base.size, (0, 0, 0, 0))}
     t_box = (t_center[0] - tw / 2, t_center[1] - th / 2, t_center[0] + tw / 2, t_center[1] + th / 2)
-    ink = _ink_for(img, t_box)
+    ink = WHITE if uniform_ink else _ink_for(img, t_box)
     _draw_lines(layers[ink], [t_text], f_title, t_center, ink, rng)
     if variant.get("title_style", "kakko") == "kakko":
         _slashes(ImageDraw.Draw(layers[ink]), t_box, ink, rng)
 
     for i in items:
         box = (i["cx"] - i["w"] / 2, i["cy"] - i["h"] / 2, i["cx"] + i["w"] / 2, i["cy"] + i["h"] / 2)
-        ink = _ink_for(img, box)
+        ink = WHITE if uniform_ink else _ink_for(img, box)
         # ラベルを別の透明画像に書いて、全体を少し傾けて貼る
         pad = 40
         tile = Image.new("RGBA", (int(i["w"]) + pad * 2, int(i["h"]) + pad * 2), (0, 0, 0, 0))

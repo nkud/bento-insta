@@ -31,6 +31,8 @@ jobs:
           gh api -X POST "repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" -f content=eyes || true
 
       - uses: actions/checkout@v5
+        with:
+          ref: main            # イベント発生時点ではなく、実行時点の最新の記録を使う
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -59,5 +61,8 @@ jobs:
           git add data/ docs/ 2>/dev/null || git add data/
           if ! git diff --cached --quiet; then
             git commit -m "approve: 記録を更新"
-            git pull --rebase && git push
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push origin HEAD:main && break
+              sleep 5
+            done
           fi

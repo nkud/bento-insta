@@ -60,12 +60,8 @@ def to_jpeg(img: Image.Image, q: int) -> bytes:
     return buf.getvalue()
 
 
-def make_post(img: Image.Image, note: str, cfg: dict, strategy: dict, seed: int,
-              variant_override: dict | None = None) -> dict:
-    """解析 → 切り出し・色補正 → 手書き風画像 → 作り置きメモ → キャプション。"""
-    analysis = vision.analyze(img, note, cfg["claude"]["model"])
-    if not analysis.get("is_bento", True):
-        raise ValueError("お弁当の写真ではないと判定されました")
+def render_images(img: Image.Image, analysis: dict, variant: dict, cfg: dict, seed: int) -> list[bytes]:
+    """切り出し・色補正 → 手書き風画像（→ 作り置きメモ）。解析結果は使い回せる。"""
     W, H = cfg["image"]["width"], cfg["image"]["height"]
     photo, to_px = annotate.crop_portrait(img, analysis["bento_bbox"], W, H)
     photo = color.enhance(photo, cfg["image"].get("color"))
@@ -73,16 +69,28 @@ def make_post(img: Image.Image, note: str, cfg: dict, strategy: dict, seed: int,
     bx0, by0 = to_px(b["x0"], b["y0"])
     bx1, by1 = to_px(b["x1"], b["y1"])
     dishes_px = [{**d, "px": to_px(d["x"], d["y"])[0], "py": to_px(d["x"], d["y"])[1]}
-                 for d in analysis["dishes"]]
-    variant = strat.choose_variant(cfg, strategy, random.Random(seed))
-    variant.update({k: v for k, v in (variant_override or {}).items() if v})
+                 for d in analysis["dishes"] if not d.get("hidden")]
     drawn = annotate.render(photo, analysis["title"], dishes_px, (bx0, by0, bx1, by1),
-                            variant, date=now_jst().date(), seed=seed)
-    text = caption.build(analysis, note, variant, strategy, cfg)
+                            variant, date=now_jst().date(), seed=seed,
+                            show_notes=cfg["image"].get("show_notes", False),
+                            uniform_ink=cfg["image"].get("uniform_ink", True))
     q = cfg["image"]["jpeg_quality"]
     images = [to_jpeg(photo, q), to_jpeg(drawn, q)]
     if cfg["image"].get("memo_slide") and analysis.get("prep"):
         images.append(to_jpeg(memo.render(photo, analysis["title"], analysis["prep"], (W, H), seed=seed), q))
+    return images
+
+
+def make_post(img: Image.Image, note: str, cfg: dict, strategy: dict, seed: int,
+              variant_override: dict | None = None) -> dict:
+    """解析 → 画像 → キャプション。"""
+    analysis = vision.analyze(img, note, cfg["claude"]["model"])
+    if not analysis.get("is_bento", True):
+        raise ValueError("お弁当の写真ではないと判定されました")
+    variant = strat.choose_variant(cfg, strategy, random.Random(seed))
+    variant.update({k: v for k, v in (variant_override or {}).items() if v})
+    images = render_images(img, analysis, variant, cfg, seed)
+    text = caption.build(analysis, note, variant, strategy, cfg)
     return {"analysis": analysis, "variant": variant, "caption": text, "images": images}
 
 
@@ -151,6 +159,40 @@ def build_draft(svc, folder: str, rec: dict, cfg: dict, strategy: dict, extra_me
     urls = [hosting.upload(f"media/{stamp}-{f['id'][:8]}-{i}.jpg", b) for i, b in enumerate(p["images"], 1)]
     rec.update({"memo": note, "title": p["analysis"]["title"], "analysis": p["analysis"],
                 "variant": p["variant"], "caption": p["caption"], "image_urls": urls, "error": None})
+
+
+def rerender_draft(svc, rec: dict, cfg: dict, title: str | None = None, dish_edits: list | None = None,
+                   variant_override: dict | None = None) -> None:
+    """写真の解析はそのままで、お弁当名・おかず名・置き場所・文字の太さだけ変えて2枚目を描き直す。"""
+    import copy
+    import drive
+    import hosting
+    analysis = copy.deepcopy(rec["analysis"])
+    if title:
+        analysis["title"] = title
+    dishes = analysis["dishes"]
+    for e in dish_edits or []:
+        i = e.get("index")
+        if not isinstance(i, int) or not (0 <= i < len(dishes)):
+            continue
+        d = dishes[i]
+        if e.get("remove"):
+            d["hidden"] = True
+            continue
+        d.pop("hidden", None)
+        if e.get("name"):
+            d["name"] = e["name"]
+        if "note" in e and e["note"] is not None:
+            d["note"] = e["note"]
+        if e.get("place") in ("T", "B", "L", "R", "auto"):
+            d["place"] = None if e["place"] == "auto" else e["place"]
+    variant = {**(rec.get("variant") or {}), **{k: v for k, v in (variant_override or {}).items() if v}}
+    img = open_image(drive.download(svc, rec["drive_file_id"]))
+    seed = zlib.crc32(f"{rec['drive_file_id']}-{rec.get('attempts', 1)}".encode())
+    images = render_images(img, analysis, variant, cfg, seed)
+    stamp = now_jst().strftime("%Y%m%d-%H%M%S")
+    urls = [hosting.upload(f"media/{stamp}-{rec['drive_file_id'][:8]}-{i}.jpg", b) for i, b in enumerate(images, 1)]
+    rec.update({"analysis": analysis, "title": analysis["title"], "variant": variant, "image_urls": urls, "error": None})
 
 
 # ------------------------------------------------------------------ 投稿

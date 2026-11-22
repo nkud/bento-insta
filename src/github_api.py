@@ -41,3 +41,16 @@ def comment(number: int, body: str) -> None:
 
 def set_labels(number: int, labels: list[str]) -> None:
     _req("PUT", f"/issues/{number}/labels", json={"labels": labels})
+
+
+def list_comments(number: int) -> list[dict]:
+    out, page = [], 1
+    while True:
+        r = requests.get(f"{API}/repos/{_repo()}/issues/{number}/comments", headers=_h(),
+                         params={"per_page": 100, "page": page}, timeout=30)
+        r.raise_for_status()
+        batch = r.json()
+        out += batch
+        if len(batch) < 100:
+            return out
+        page += 1

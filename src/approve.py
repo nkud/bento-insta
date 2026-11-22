@@ -50,17 +50,27 @@ TOOL = {
         "type": "object",
         "properties": {
             "action": {"type": "string",
-                       "enum": ["post_now", "schedule", "redo", "skip", "caption_only", "none"],
-                       "description": "post_now=今すぐ投稿 / schedule=時刻を決めて予約 / redo=画像とキャプションを作り直す / "
-                                      "skip=投稿しない / caption_only=キャプションを直すだけ / none=指示ではない・意図が曖昧"},
+                       "enum": ["post_now", "schedule", "edit_image", "redo", "skip", "caption_only", "none"],
+                       "description": "post_now=今すぐ投稿 / schedule=時刻を決めて予約 / edit_image=2枚目の手書き画像を直す（写真の解析はそのまま） / "
+                                      "redo=写真から解析し直して全部作り直す / skip=投稿しない / caption_only=キャプションを直すだけ / none=指示ではない・意図が曖昧"},
+            "image_title": {"type": "string", "description": "edit_image で2枚目のお弁当名（タイトル）を変えるとき、新しいお弁当名（例: オムライス弁当）"},
+            "dish_edits": {"type": "array", "description": "edit_image で2枚目のおかずを直すとき。変えるおかずだけ",
+                           "items": {"type": "object", "properties": {
+                               "index": {"type": "integer", "description": "下の『2枚目のおかず』の番号"},
+                               "name": {"type": "string", "description": "新しいおかず名（変えるときだけ）"},
+                               "note": {"type": "string", "description": "補足（かっこ書き）。消すときは空文字"},
+                               "place": {"type": "string", "enum": ["T", "B", "L", "R", "auto"],
+                                         "description": "文字を置く場所。T=弁当箱の上 B=下 L=左 R=右 auto=おまかせ"},
+                               "remove": {"type": "boolean", "description": "2枚目からこのおかずの文字を消す"}},
+                               "required": ["index"]}},
             "new_caption": {"type": "string",
                             "description": "キャプションを直す指示があるときだけ、直した後のキャプション全文。"
                                            "指示された所以外は一字一句変えない。ハッシュタグは5個まで"},
             "schedule_at": {"type": "string", "description": "schedule のとき。JST の日時 'YYYY-MM-DD HH:MM'。過去にしない"},
             "redo_memo": {"type": "string", "description": "redo のとき、作り直しに反映するメモ（おかず名の訂正、エピソードなど）"},
-            "pen": {"type": "string", "enum": ["", "marker", "thin"], "description": "redo で文字の太さの指示があれば"},
+            "pen": {"type": "string", "enum": ["", "marker", "thin"], "description": "文字の太さの指示があれば（marker=太め, thin=細め）"},
             "title_style": {"type": "string", "enum": ["", "kakko", "plain", "date"],
-                            "description": "redo でタイトルの書き方の指示があれば（kakko=＼〇〇弁当／, plain=〇〇弁当, date=日付つき）"},
+                            "description": "タイトルの書き方の指示があれば（kakko=＼〇〇弁当／, plain=〇〇弁当, date=日付つき）。日付を消して→plain"},
             "reply": {"type": "string", "description": "コメントした人への短い返事（日本語、1〜2文、です・ます調）。"
                                                        "none のときは、どう書けば動くかを一言添えて聞き返す"},
         },
@@ -76,7 +86,10 @@ PROMPT = """お弁当の Instagram 投稿の「下書き」に、家族がコメ
 # 下書きの状態
 お弁当名: {title}
 状態: {status}{scheduled}
-おかず: {dishes}
+2枚目のタイトルの書き方: {title_style}（kakko=＼〇〇弁当／, plain=〇〇弁当, date=日付つき）
+
+# 2枚目（手書き画像）のおかず（番号: 名前［補足］）
+{dishes}
 
 # いまのキャプション
 {caption}
@@ -88,7 +101,10 @@ PROMPT = """お弁当の Instagram 投稿の「下書き」に、家族がコメ
 - 「OK」「いいね、出して」「投稿して」など、承認や投稿の意思 → post_now
 - 時刻や「今夜」「明日の朝」など、投稿のタイミングの指定 → schedule（「今夜」は20:00、「明日の朝」は7:30、「お昼」は12:00 を目安）
 - キャプションの言い回し・ハッシュタグ・一文の追加削除 → new_caption を作る。投稿や予約の指示も一緒なら action はそちら、無ければ caption_only
-- おかず名の間違い、写真の解析し直し、手書き画像の作り直し、文字の太さやタイトルの書き方の変更 → redo
+- 「2枚目」「画像」「文字」についての指示（おかず名の訂正、お弁当名の変更、かっこ書きを消す、文字の場所を上にする、日付を消す、太さ）→ edit_image。
+  dish_edits は番号で指定し、頼まれていないおかずは入れない。「全部の（）を消して」なら補足のある全部のおかずに note=""
+- お弁当名やおかず名の訂正は、画像（edit_image）とキャプション（new_caption）の両方に反映する
+- 写真の読み取り自体が大きく間違っていて、おかずの数や位置から直す必要があるときだけ → redo
 - 「やめる」「出さない」「ボツ」→ skip
 - 感想や質問など、操作の指示ではない／どちらとも取れる → none（推測で投稿しない）"""
 
@@ -101,7 +117,9 @@ def interpret(text: str, rec: dict, current_caption: str, cfg: dict) -> dict:
         title=rec.get("title", ""),
         status={"draft": "確認待ち", "scheduled": "予約済み"}.get(rec.get("status"), rec.get("status")),
         scheduled=f"（{dt.datetime.fromisoformat(rec['scheduled_at']):%m/%d %H:%M}）" if rec.get("scheduled_at") else "",
-        dishes="、".join(d.get("name", "") for d in a.get("dishes", [])),
+        title_style=(rec.get("variant") or {}).get("title_style", ""),
+        dishes="\n".join(f"{i}: {d.get('name', '')}" + (f"［{d['note']}］" if d.get("note") else "")
+                         + ("（非表示）" if d.get("hidden") else "") for i, d in enumerate(a.get("dishes", []))),
         caption=current_caption,
         comment=text,
     ), max_tokens=2500)
@@ -126,11 +144,30 @@ def slash(text: str) -> dict | None:
 
 
 # ------------------------------------------------------------------ 実行
+ALLOWED = {"OWNER", "MEMBER", "COLLABORATOR"}
+
+
+def pending_text(number: int) -> str:
+    """最後のボットの返事より後の、家族のコメントをまとめて返す。
+    続けてコメントすると GitHub が途中の実行を取り消すことがあるので、取りこぼさないよう全部読む。"""
+    comments = gh.list_comments(number)
+    last_bot = max((i for i, c in enumerate(comments) if c["user"]["login"] == "github-actions[bot]"), default=-1)
+    texts = [c["body"].strip() for c in comments[last_bot + 1:]
+             if c.get("author_association") in ALLOWED and c["user"]["type"] != "Bot" and c["body"].strip()]
+    return unicodedata.normalize("NFKC", "\n\n".join(texts)).strip()
+
+
 def main():
     number = int(env("ISSUE_NUMBER", required=True))
-    text = unicodedata.normalize("NFKC", env("COMMENT_BODY", "")).strip()
+    try:
+        text = pending_text(number)
+    except Exception:  # noqa: BLE001  一覧が取れないときはこのコメントだけ処理
+        traceback.print_exc()
+        text = unicodedata.normalize("NFKC", env("COMMENT_BODY", "")).strip()
     if not text:
+        print("未処理のコメントはありません（前の実行で対応済み）")
         return
+    print(f"処理するコメント:\n{text}")
 
     cfg = load_config()
     posts = load_json(POSTS_FILE, [])
@@ -142,10 +179,15 @@ def main():
         gh.comment(number, f"これはもう投稿済みです: {rec.get('permalink')}")
         return
 
-    issue = gh.get_issue(number)
-    body = issue.get("body", "")
-    current = post.parse_caption(body) or rec.get("caption", "")
-    decision = slash(text) or interpret(text, rec, current, cfg)
+    try:
+        issue = gh.get_issue(number)
+        body = issue.get("body", "")
+        current = post.parse_caption(body) or rec.get("caption", "")
+        decision = slash(text) or interpret(text, rec, current, cfg)
+    except Exception as e:  # noqa: BLE001
+        traceback.print_exc()
+        gh.comment(number, f"⚠️ コメントを読み取れませんでした。少し待ってもう一度コメントしてください。\n```\n{str(e)[:300]}\n```")
+        raise
     action = decision.get("action", "none")
     reply = (decision.get("reply") or "").strip()
     print(f"判断: {decision}")
@@ -191,6 +233,17 @@ def main():
             gh.update_issue(number, title=f"🍱 下書き：{rec['title']}", body=post.issue_body(rec, strat.load()))
             gh.set_labels(number, [post.DRAFT_LABEL])
             gh.comment(number, f"🔁 {reply or '作り直しました。'}\n上の画像とキャプションを確認してください。")
+
+        elif action == "edit_image":
+            import drive
+            override = {k: decision.get(k) for k in ("pen", "title_style") if decision.get(k)}
+            post.rerender_draft(drive.service(), rec, cfg, title=decision.get("image_title"),
+                                dish_edits=decision.get("dish_edits"), variant_override=override)
+            body = gh.get_issue(number).get("body", "")
+            cap_now = post.parse_caption(body) or rec.get("caption", "")
+            gh.update_issue(number, title=f"🍱 下書き：{rec['title']}",
+                            body=post.replace_caption(post.issue_body(rec, strat.load()), cap_now))
+            gh.comment(number, f"🖍 {reply or '2枚目を直しました。'}\n上の画像を確認してください。")
 
         elif action == "caption_only":
             gh.comment(number, f"✏️ {reply or 'キャプションを直しました。'}\n上の枠が新しいキャプションです。よければ「出して」や時刻をコメントしてください。")
