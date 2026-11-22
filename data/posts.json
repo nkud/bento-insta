@@ -132,19 +132,19 @@
       "dishes": [
         {
           "name": "じゅーしー",
-          "note": "沖縄風の混ぜご飯",
+          "note": "",
           "x": 0.48,
           "y": 0.31
         },
         {
           "name": "エビマヨ",
-          "note": "パセリ風味",
+          "note": "",
           "x": 0.47,
           "y": 0.47
         },
         {
           "name": "だし巻き卵",
-          "note": "2切れ",
+          "note": "",
           "x": 0.34,
           "y": 0.64
         },
@@ -155,13 +155,13 @@
         },
         {
           "name": "にんじんのラペ",
-          "note": "ごま入り",
+          "note": "",
           "x": 0.33,
           "y": 0.77
         },
         {
           "name": "大学芋",
-          "note": "黒ごま添え",
+          "note": "",
           "x": 0.5,
           "y": 0.76
         },
@@ -212,8 +212,8 @@
     },
     "caption": "エビマヨ弁当\n☆じゅーしー\n☆エビマヨ\n☆だし巻き卵\n☆ピーマンの肉詰め\n☆にんじんのラペ\n☆大学芋\n☆春巻きあんこ\n\nぷりぷりエビマヨとふんわりだし巻き、にんじんの彩りもぎっしり詰めたよ。今日も在宅おつかれさま、午後もがんばってね🍤\n\n#在宅だんな弁当\n#わっぱ弁当\n#旦那弁当\n#エビマヨ弁当\n#お弁当記録",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113531-1wYcuUJG-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113531-1wYcuUJG-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122827-1wYcuUJG-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122827-1wYcuUJG-2.jpg"
     ],
     "error": null,
     "issue_number": 2,
@@ -227,10 +227,10 @@
     "attempts": 4,
     "drive_description": null,
     "memo": "2枚目の手書き画像のタイトルから日付(11.22)を外す。「鶏の唐揚げ弁当」のように日付なしのタイトルにする。",
-    "title": "鶏の唐揚げ弁当",
+    "title": "唐揚げ弁当",
     "analysis": {
       "is_bento": true,
-      "title": "鶏の唐揚げ弁当",
+      "title": "唐揚げ弁当",
       "bento_bbox": {
         "x0": 0.215,
         "y0": 0.223,
@@ -239,8 +239,8 @@
       },
       "dishes": [
         {
-          "name": "炊き込みご飯",
-          "note": "ひじき入り",
+          "name": "じゅーしー",
+          "note": "沖縄",
           "x": 0.5,
           "y": 0.37
         },
@@ -248,7 +248,8 @@
           "name": "鶏の唐揚げ",
           "note": "もも肉",
           "x": 0.68,
-          "y": 0.6
+          "y": 0.6,
+          "hidden": true
         },
         {
           "name": "卵焼き",
@@ -262,7 +263,7 @@
         },
         {
           "name": "大学芋風さつまいも",
-          "note": "黒ごま付き",
+          "note": "",
           "x": 0.32,
           "y": 0.72
         }
@@ -307,8 +308,8 @@
     },
     "caption": "鶏の唐揚げ弁当\n☆炊き込みご飯\n☆鶏の唐揚げ\n☆卵焼き\n☆にんじんラペ\n☆大学芋風さつまいも\n\n今日は鶏の唐揚げがメインのお弁当だよ。唐揚げはジューシーに揚がって、卵焼きもふんわり厚焼きにできたよ🍳 にんじんラペのオレンジを端っこに詰めると、わっぱの中がぱっと明るくなるの。2枚目の手書きタイトルは日付(11.22)を外して、「鶏の唐揚げ弁当」だけのすっきりした形にしてみたよ。今日も在宅おつかれさま、午後もがんばってね。\n\n#在宅だんな弁当\n#わっぱ弁当\n#唐揚げ弁当",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113445-1WN_GNFx-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113445-1WN_GNFx-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122846-1WN_GNFx-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122846-1WN_GNFx-2.jpg"
     ],
     "error": null,
     "issue_number": 3,
@@ -352,7 +353,7 @@
           "name": "ツナサラダ",
           "x": 0.42,
           "y": 0.69,
-          "note": "白菜とツナ"
+          "note": ""
         },
         {
           "name": "さつまいも煮",
@@ -363,7 +364,7 @@
           "name": "にんじんの炒め物",
           "x": 0.58,
           "y": 0.74,
-          "note": "にんじんしりしり風"
+          "note": ""
         }
       ],
       "main": "meat",
@@ -407,8 +408,8 @@
     },
     "caption": "豚の生姜焼き弁当\n☆豚の生姜焼き\n☆エビ\n☆卵焼き\n☆ツナサラダ\n☆さつまいも煮\n☆にんじんの炒め物\n\n在宅おつかれさま、生姜焼きをご飯にたっぷりのせたよ🍚 2枚目は生姜焼きの補足を消して、エビの文字色も他と揃えました。\n\n#在宅だんな弁当\n#わっぱ弁当\n#豚の生姜焼き\n#卵焼き\n#さつまいも煮",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113120-17RLvjIa-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113120-17RLvjIa-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122856-17RLvjIa-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122856-17RLvjIa-2.jpg"
     ],
     "error": null,
     "issue_number": 4,
@@ -437,19 +438,19 @@
           "name": "いり卵",
           "x": 0.36,
           "y": 0.38,
-          "note": "パセリ入り"
+          "note": ""
         },
         {
           "name": "牛そぼろ",
           "x": 0.65,
           "y": 0.37,
-          "note": "甘辛味のひき肉"
+          "note": ""
         },
         {
           "name": "つくね",
           "x": 0.36,
           "y": 0.65,
-          "note": "ごまをのせて"
+          "note": ""
         },
         {
           "name": "にんじんしりしり",
@@ -460,7 +461,7 @@
           "name": "さつまいも天",
           "x": 0.4,
           "y": 0.76,
-          "note": "黒ゴマ付き"
+          "note": ""
         },
         {
           "name": "ウインナー",
@@ -512,8 +513,8 @@
     },
     "caption": "そぼろ卵弁当\n☆いり卵\n☆牛そぼろ\n☆つくね\n☆にんじんしりしり\n☆さつまいも天\n☆ウインナー\n☆あんこ春巻き\n\nふわふわのいり卵とそぼろで黄色が映えたよ。にんじんしりしりで彩りもばっちり、今日も在宅おつかれさま🍱\n\n#在宅だんな弁当\n#わっぱ弁当\n#そぼろ弁当\n#いり卵\n#にんじんしりしり",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113347-16_U-yMq-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113347-16_U-yMq-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122905-16_U-yMq-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122905-16_U-yMq-2.jpg"
     ],
     "error": null,
     "issue_number": 5,
@@ -527,10 +528,10 @@
     "attempts": 3,
     "drive_description": null,
     "memo": "2枚目の手書き画像で、おかずの並び順を「ちくわの磯辺揚げ」「ほうれん草のごま和え」を一番上（1番目・2番目）に書く。残りのおかずはその下に続ける。",
-    "title": "オムレツ弁当",
+    "title": "オムライス弁当",
     "analysis": {
       "is_bento": true,
-      "title": "オムレツ弁当",
+      "title": "オムライス弁当",
       "bento_bbox": {
         "x0": 0.12,
         "y0": 0.15,
@@ -608,15 +609,15 @@
       }
     },
     "variant": {
-      "title_style": "date",
+      "title_style": "plain",
       "pen": "thin",
       "caption_length": "long",
       "hashtag_count": 5
     },
     "caption": "オムレツ弁当\n☆ちくわの磯辺揚げ\n☆ほうれん草のごま和え\n☆ケチャップオムレツ\n☆メンチカツ\n☆ポテトサラダ\n☆豆苗と油揚げ炒め\n\n今日はふわふわケチャップオムレツのお弁当だよ🍳 卵は弱火でゆっくり焼くと、ふんわり仕上がるよ。ほうれん草と豆苗の緑で、見た目も明るくなったかな。2枚目の手書き画像では、ちくわの磯辺揚げとほうれん草のごま和えを一番上に書いて、残りのおかずをその下に続けてるよ。今日も在宅おつかれさま、午後もがんばってね。\n\n#在宅だんな弁当\n#わっぱ弁当\n#オムレツ弁当\n#メンチカツ\n#ほうれん草のごま和え",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113210-1miL13_3-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-113210-1miL13_3-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122918-1miL13_3-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122918-1miL13_3-2.jpg"
     ],
     "error": null,
     "issue_number": 6,
