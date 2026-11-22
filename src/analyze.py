@@ -239,7 +239,7 @@ def main():
 
     old = load_json(STRATEGY_FILE, {})
     ins = old.get("insights")
-    if views and len(views) >= 3 and not args.no_llm and os.environ.get("ANTHROPIC_API_KEY"):
+    if views and len(views) >= 3 and not args.no_llm and (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("CLAUDE_CODE_OAUTH_TOKEN")):
         ins = llm_insights(views, groups, tags, cfg["claude"]["model"])
 
     strategy = {

@@ -162,6 +162,8 @@ def error_comment(number: int, e: Exception) -> None:
         pass
     if "credit balance is too low" in msg:
         head = "⚠️ Claude API のクレジットが足りず、コメントを読み取れませんでした。チャージされたら自動で対応し直します（コメントし直さなくて大丈夫です）。"
+    elif "limit" in msg.lower() and "Claude Code" in msg:
+        head = "⚠️ Claude の利用上限に達したので、少し時間をおいて自動でやり直します（コメントし直さなくて大丈夫です）。"
     else:
         head = "⚠️ うまくいきませんでした。次の定期実行で自動でやり直します（コメントし直さなくて大丈夫です）。"
     gh.comment(number, f"{head}\n```\n{msg[:300]}\n```\n{RETRY_MARK}")

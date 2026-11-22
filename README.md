@@ -95,7 +95,8 @@ Instagram にカルーセル投稿（2枚）
 
 | Secret | 内容 |
 |---|---|
-| `ANTHROPIC_API_KEY` | Claude API キー |
+| `CLAUDE_CODE_OAUTH_TOKEN` | おすすめ。Claude のサブスク（Pro/Max）で動かすトークン。手元で `claude setup-token` を実行して発行。API クレジット不要 |
+| `ANTHROPIC_API_KEY` | 代わりに Claude API（従量課金）で動かす場合のキー。上のトークンがあればそちらが優先 |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | サービスアカウントの JSON（ファイルの中身をそのまま） |
 | `DRIVE_FOLDER_ID` | お弁当フォルダの ID |
 | `IG_ACCESS_TOKEN` | Instagram のアクセストークン |
