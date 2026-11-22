@@ -540,8 +540,8 @@
       },
       "dishes": [
         {
-          "name": "ちくわの磯辺揚げ",
-          "note": "青のり香る",
+          "name": "オムライス",
+          "note": "",
           "x": 0.25,
           "y": 0.45
         },
@@ -552,25 +552,25 @@
           "y": 0.23
         },
         {
-          "name": "ケチャップオムレツ",
-          "note": "パセリ添え",
+          "name": "ちくわの磯辺揚げ",
+          "note": "",
           "x": 0.52,
           "y": 0.38
         },
         {
-          "name": "メンチカツ",
+          "name": "ささみカツ",
           "note": "",
           "x": 0.3,
           "y": 0.6
         },
         {
-          "name": "ポテトサラダ",
-          "note": "カップ詰め",
+          "name": "グラタン",
+          "note": "",
           "x": 0.45,
           "y": 0.7
         },
         {
-          "name": "豆苗と油揚げ炒め",
+          "name": "豆苗とちくわの炒め物",
           "note": "",
           "x": 0.69,
           "y": 0.72
@@ -616,8 +616,8 @@
     },
     "caption": "オムレツ弁当\n☆ちくわの磯辺揚げ\n☆ほうれん草のごま和え\n☆ケチャップオムレツ\n☆メンチカツ\n☆ポテトサラダ\n☆豆苗と油揚げ炒め\n\n今日はふわふわケチャップオムレツのお弁当だよ🍳 卵は弱火でゆっくり焼くと、ふんわり仕上がるよ。ほうれん草と豆苗の緑で、見た目も明るくなったかな。2枚目の手書き画像では、ちくわの磯辺揚げとほうれん草のごま和えを一番上に書いて、残りのおかずをその下に続けてるよ。今日も在宅おつかれさま、午後もがんばってね。\n\n#在宅だんな弁当\n#わっぱ弁当\n#オムレツ弁当\n#メンチカツ\n#ほうれん草のごま和え",
     "image_urls": [
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122918-1miL13_3-1.jpg",
-      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-122918-1miL13_3-2.jpg"
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-135329-1miL13_3-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261122-135329-1miL13_3-2.jpg"
     ],
     "error": null,
     "issue_number": 6,
