@@ -145,13 +145,24 @@ def slash(text: str) -> dict | None:
 
 # ------------------------------------------------------------------ 実行
 ALLOWED = {"OWNER", "MEMBER", "COLLABORATOR"}
+RETRY_MARK = "<!-- retry -->"   # この印のついた返事は「対応済み」に数えない（あとで自動でやり直す）
+
+
+def error_comment(number: int, e: Exception) -> None:
+    msg = str(e)
+    if "credit balance is too low" in msg:
+        head = "⚠️ Claude API のクレジットが足りず、コメントを読み取れませんでした。チャージされたら自動で対応し直します（コメントし直さなくて大丈夫です）。"
+    else:
+        head = "⚠️ うまくいきませんでした。次の定期実行で自動でやり直します（コメントし直さなくて大丈夫です）。"
+    gh.comment(number, f"{head}\n```\n{msg[:300]}\n```\n{RETRY_MARK}")
 
 
 def pending_text(number: int) -> str:
     """最後のボットの返事より後の、家族のコメントをまとめて返す。
     続けてコメントすると GitHub が途中の実行を取り消すことがあるので、取りこぼさないよう全部読む。"""
     comments = gh.list_comments(number)
-    last_bot = max((i for i, c in enumerate(comments) if c["user"]["login"] == "github-actions[bot]"), default=-1)
+    last_bot = max((i for i, c in enumerate(comments)
+                    if c["user"]["login"] == "github-actions[bot]" and RETRY_MARK not in c["body"]), default=-1)
     texts = [c["body"].strip() for c in comments[last_bot + 1:]
              if c.get("author_association") in ALLOWED and c["user"]["type"] != "Bot" and c["body"].strip()]
     return unicodedata.normalize("NFKC", "\n\n".join(texts)).strip()
@@ -201,7 +212,7 @@ def handle(number: int, fallback_text: str = "") -> None:
         decision = slash(text) or interpret(text, rec, current, cfg)
     except Exception as e:  # noqa: BLE001
         traceback.print_exc()
-        gh.comment(number, f"⚠️ コメントを読み取れませんでした。少し待ってもう一度コメントしてください。\n```\n{str(e)[:300]}\n```")
+        error_comment(number, e)
         raise
     action = decision.get("action", "none")
     reply = (decision.get("reply") or "").strip()
@@ -268,7 +279,7 @@ def handle(number: int, fallback_text: str = "") -> None:
     except Exception as e:  # noqa: BLE001
         traceback.print_exc()
         rec["error"] = str(e)[:500]
-        gh.comment(number, f"⚠️ うまくいきませんでした。もう一度コメントしてみてください。\n```\n{e}\n```")
+        error_comment(number, e)
         raise
     finally:
         save_json(POSTS_FILE, posts)
