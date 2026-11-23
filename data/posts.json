@@ -623,5 +623,116 @@
     "issue_number": 6,
     "status": "scheduled",
     "scheduled_at": "2026-11-24T13:00:00+09:00"
+  },
+  {
+    "drive_file_id": "1-xGaolcqA9Klf1sAlgMRLOBjedn5Eia3",
+    "drive_name": "IMG_1779.HEIC",
+    "drive_created": "2026-11-23T12:42:37.346Z",
+    "attempts": 1,
+    "drive_description": null,
+    "memo": "",
+    "title": "豚の生姜焼きとエビの弁当",
+    "analysis": {
+      "is_bento": true,
+      "title": "豚の生姜焼きとエビの弁当",
+      "bento_bbox": {
+        "x0": 0.18,
+        "y0": 0.2,
+        "x1": 0.79,
+        "y1": 0.82
+      },
+      "dishes": [
+        {
+          "name": "焼き肉",
+          "note": "ごまをふって",
+          "x": 0.5,
+          "y": 0.43
+        },
+        {
+          "name": "ごはん",
+          "x": 0.55,
+          "y": 0.26
+        },
+        {
+          "name": "サニーレタス",
+          "x": 0.55,
+          "y": 0.31
+        },
+        {
+          "name": "エビ炒め",
+          "x": 0.6,
+          "y": 0.55
+        },
+        {
+          "name": "卵焼き",
+          "x": 0.35,
+          "y": 0.6
+        },
+        {
+          "name": "豆苗とちくわ",
+          "note": "和え物",
+          "x": 0.3,
+          "y": 0.74
+        },
+        {
+          "name": "さつまいもの春巻き",
+          "note": "あん入り",
+          "x": 0.36,
+          "y": 0.79
+        },
+        {
+          "name": "ひじき煮",
+          "x": 0.65,
+          "y": 0.74
+        }
+      ],
+      "main": "meat",
+      "tone": "brown",
+      "box": "1段（オレンジ色の小判型）",
+      "highlights": [
+        "ごはんの上にお肉がどんと乗ったボリューム感",
+        "黄色い卵焼きと緑の豆苗で彩りアップ",
+        "エビのぷりっと感",
+        "ひじきや春巻きなど品数が多い"
+      ],
+      "prep": {
+        "night": [
+          "ひじき煮",
+          "豆苗とちくわの和え物",
+          "さつまいもの春巻き（包むところまで）"
+        ],
+        "morning": [
+          "焼き肉",
+          "エビ炒め",
+          "卵焼き",
+          "サニーレタスを敷いてごはんを詰める"
+        ],
+        "stock": [
+          {
+            "name": "ひじき煮",
+            "keep": "冷蔵2〜3日"
+          },
+          {
+            "name": "さつまいもの春巻き",
+            "keep": "冷凍2週間"
+          }
+        ],
+        "tip": "ひじき煮など作り置きを先に詰めて、肉は粗熱を取ってからレタスの上にのせると傷みにくいです。"
+      }
+    },
+    "variant": {
+      "title_style": "plain",
+      "pen": "thin",
+      "caption_length": "long",
+      "hashtag_count": 3
+    },
+    "caption": "豚の生姜焼きとエビの弁当\n☆焼き肉\n☆ごはん\n☆サニーレタス\n☆エビ炒め\n☆卵焼き\n☆豆苗とちくわ\n☆さつまいもの春巻き\n☆ひじき煮\n\n今日は豚の生姜焼きをごはんの上にどんと乗せたボリューム弁当です🍚 エビ炒めはぷりっと仕上げたくて、炒めすぎないのがコツ。卵焼きの黄色と豆苗の緑で彩りもアップしました。ひじき煮や春巻きも入れて品数多めなので、今日も在宅おつかれさま、午後もがんばってね。\n\n#在宅だんな弁当\n#わっぱ弁当\n#生姜焼き弁当",
+    "image_urls": [
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261124-050943-1-xGaolc-1.jpg",
+      "https://raw.githubusercontent.com/nkud/bento-insta/media/media/20261124-050943-1-xGaolc-2.jpg"
+    ],
+    "error": null,
+    "issue_number": 7,
+    "status": "draft"
   }
 ]
