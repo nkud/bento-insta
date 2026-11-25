@@ -324,7 +324,19 @@
       "#わっぱ弁当",
       "#唐揚げ弁当"
     ],
-    "followers_at_post": 1
+    "followers_at_post": 1,
+    "metrics": {
+      "likes": 0,
+      "comments": 0,
+      "saved": null,
+      "shares": null,
+      "reach": null,
+      "views": null,
+      "total_interactions": null,
+      "age_hours": 2.3,
+      "collected_at": "2026-11-25T12:02:12.828181+09:00"
+    },
+    "snapshots": {}
   },
   {
     "drive_file_id": "17RLvjIaw16XDOPAYrRrlnE89gUV_dmyi",
@@ -644,7 +656,19 @@
       "#ささみカツ",
       "#ほうれん草のごま和え"
     ],
-    "followers_at_post": 1
+    "followers_at_post": 1,
+    "metrics": {
+      "likes": 0,
+      "comments": 0,
+      "saved": null,
+      "shares": null,
+      "reach": null,
+      "views": null,
+      "total_interactions": null,
+      "age_hours": 22.3,
+      "collected_at": "2026-11-25T12:02:12.828181+09:00"
+    },
+    "snapshots": {}
   },
   {
     "drive_file_id": "1-xGaolcqA9Klf1sAlgMRLOBjedn5Eia3",
