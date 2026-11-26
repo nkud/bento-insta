@@ -329,13 +329,13 @@
     "metrics": {
       "likes": 0,
       "comments": 0,
-      "saved": null,
-      "shares": null,
-      "reach": null,
-      "views": null,
-      "total_interactions": null,
-      "age_hours": 25.5,
-      "collected_at": "2026-11-26T11:10:53.559413+09:00"
+      "saved": 0,
+      "shares": 0,
+      "reach": 1,
+      "views": 4,
+      "total_interactions": 0,
+      "age_hours": 28.8,
+      "collected_at": "2026-11-26T14:26:39.161361+09:00"
     },
     "snapshots": {
       "24": {
@@ -673,13 +673,13 @@
     "metrics": {
       "likes": 0,
       "comments": 0,
-      "saved": null,
-      "shares": null,
-      "reach": null,
-      "views": null,
-      "total_interactions": null,
-      "age_hours": 45.4,
-      "collected_at": "2026-11-26T11:10:53.559413+09:00"
+      "saved": 0,
+      "shares": 0,
+      "reach": 1,
+      "views": 4,
+      "total_interactions": 0,
+      "age_hours": 48.7,
+      "collected_at": "2026-11-26T14:26:39.161361+09:00"
     },
     "snapshots": {
       "24": {
