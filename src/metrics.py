@@ -32,11 +32,15 @@ def main():
         age_h = (now - dt.datetime.fromisoformat(p["posted_at"])).total_seconds() / 3600
         if age_h > STOP_AFTER_DAYS * 24 and p.get("metrics"):
             continue
+        if p.get("ig_missing"):         # Instagram 側で削除された投稿は取りに行かない
+            continue
         try:
             f = ig.media_fields(p["ig_media_id"])
             ins = ig.media_insights(p["ig_media_id"])
         except RuntimeError as e:
             print(f"取得失敗 {p['ig_media_id']}: {e}")
+            if "does not exist" in str(e) and "'error_subcode': 33" in str(e):
+                p["ig_missing"] = True   # 削除済み。分析からも外す
             continue
         m = {"likes": ins.get("likes", f.get("like_count")),
              "comments": ins.get("comments", f.get("comments_count")),

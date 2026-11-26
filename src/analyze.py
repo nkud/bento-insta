@@ -231,7 +231,8 @@ def main():
     now = now_jst()
     mature = cfg["analysis"]["mature_hours"]
     views = [post_view(p) for p in posts
-             if p.get("status") == "posted" and p.get("metrics")
+             if p.get("status") == "posted" and p.get("metrics") and not p.get("ig_missing")
+             and isinstance((p.get("snapshots", {}).get("72") or p["metrics"]).get("reach"), (int, float))
              and (now - dt.datetime.fromisoformat(p["posted_at"])).total_seconds() / 3600 >= mature]
     groups = group_stats(views)
     tags = hashtag_stats(views)

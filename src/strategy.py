@@ -23,8 +23,10 @@ def choose_variant(cfg: dict, strategy: dict, rng: random.Random | None = None) 
             pick = rng.choice(under)
         elif rng.random() < exp["epsilon"]:         # 探索
             pick = rng.choice(options)
-        else:                                       # 活用：平均スコア最大
-            pick = max(options, key=lambda o: stats.get(str(o), {}).get("mean", 0))
+        else:                                       # 活用：平均スコア最大（同点ならランダム）
+            means = {str(o): stats.get(str(o), {}).get("mean", 0) for o in options}
+            top = max(means.values())
+            pick = rng.choice([o for o in options if means[str(o)] == top])
         variant[dim] = pick
     return variant
 

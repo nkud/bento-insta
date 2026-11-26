@@ -57,8 +57,10 @@ def post_rows(posts: list, cfg: dict) -> list[dict]:
     rows = []
     for k, p in enumerate(order):
         m = (p.get("snapshots") or {}).get("72") or p.get("metrics") or {}
-        reach = _num(m.get("reach"))
-        likes, saved, shares, com = (_num(m.get(x)) for x in ("likes", "saved", "shares", "comments"))
+        def _val(x):   # 取れなかった指標は 0 ではなく空（null）のまま渡す
+            v = m.get(x)
+            return float(v) if isinstance(v, (int, float)) else None
+        reach, likes, saved, shares, com = (_val(x) for x in ("reach", "likes", "saved", "shares", "comments"))
         posted = dt.datetime.fromisoformat(p["posted_at"]) if p.get("posted_at") else None
         age_h = (now - posted).total_seconds() / 3600 if posted else None
         a = p.get("analysis") or {}
@@ -74,12 +76,10 @@ def post_rows(posts: list, cfg: dict) -> list[dict]:
             if p.get("scheduled_at") else "",
             "has_metrics": bool(p.get("metrics")),
             "mature": bool(p.get("metrics")) and age_h is not None and age_h >= mature_h,
-            "likes": likes if p.get("metrics") else None,
-            "saved": saved if p.get("metrics") else None,
-            "comments": com if p.get("metrics") else None,
-            "shares": shares if p.get("metrics") else None,
-            "reach": reach if p.get("metrics") else None,
-            "score": round((likes + 2 * saved + 2 * shares + 3 * com) / reach * 100, 2) if reach else None,
+            "likes": likes, "saved": saved, "comments": com, "shares": shares, "reach": reach,
+            "score": round(((likes or 0) + 2 * (saved or 0) + 2 * (shares or 0) + 3 * (com or 0)) / reach * 100, 2)
+            if reach else None,
+            "ig_missing": bool(p.get("ig_missing")),
             "title_style": str(v.get("title_style", "")),
             "pen": str(v.get("pen", "")),
             "caption_length": str(v.get("caption_length", "")),
