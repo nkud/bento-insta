@@ -30,7 +30,7 @@ image:
   dslr:                         # 美味しそう＋背景ボケ（一眼レフ風）。料理は描き換えない
     enabled: true
     food_pop: 1.0                 # 美味しそう加工の強さ（0 で無し）
-    bokeh: true                   # 弁当箱の外をレンズのボケでぼかす
+    bokeh: false                  # 弁当箱の外をレンズのボケでぼかす（使わない）
     bokeh_radius: 0.022           # ボケの大きさ（短辺に対する比）
     vignette: 0.22                # 周辺減光
     grain: 0.012                  # 粒子感
