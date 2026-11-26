@@ -73,12 +73,14 @@ class IG:
         try:
             return fetch(metrics)
         except RuntimeError:          # 一部の指標が非対応のときは1つずつ
-            out = {}
+            out, errs = {}, {}
             for m in metrics:
                 try:
                     out.update(fetch([m]))
-                except RuntimeError:
-                    pass
+                except RuntimeError as e:
+                    errs[m] = str(e)[:200]
+            if errs:   # 取れなかった指標は理由をログに残す（黙って null にしない）
+                print(f"インサイト取得できず {media_id}: " + "; ".join(f"{k}: {v}" for k, v in errs.items()))
             return out
 
     def account(self) -> dict:
