@@ -32,6 +32,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import annotate  # noqa: E402
 import caption  # noqa: E402
 import color  # noqa: E402
+import dslr  # noqa: E402
 import memo  # noqa: E402
 import strategy as strat  # noqa: E402
 import vision  # noqa: E402
@@ -65,6 +66,12 @@ def render_images(img: Image.Image, analysis: dict, variant: dict, cfg: dict, se
     W, H = cfg["image"]["width"], cfg["image"]["height"]
     photo, to_px = annotate.crop_portrait(img, analysis["bento_bbox"], W, H)
     photo = color.enhance(photo, cfg["image"].get("color"))
+    look = cfg["image"].get("dslr") or {}
+    if look.get("enabled"):                # 美味しそう＋背景ボケ（一眼レフ風）
+        try:
+            photo = dslr.enhance(photo, look)
+        except Exception as e:             # 失敗しても投稿は止めない
+            print(f"一眼レフ風の加工をスキップ: {e}")
     b = analysis["bento_bbox"]
     bx0, by0 = to_px(b["x0"], b["y0"])
     bx1, by1 = to_px(b["x1"], b["y1"])

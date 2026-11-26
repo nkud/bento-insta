@@ -27,6 +27,13 @@ image:
   show_notes: false             # 2枚目のおかず名の下に（補足）を書くか
   uniform_ink: true             # 2枚目の文字色を全部白にそろえる（false で明るい所は焦げ茶）
   memo_slide: false             # 3枚目に「作り置きメモ」を付ける（true で有効）
+  dslr:                         # 美味しそう＋背景ボケ（一眼レフ風）。料理は描き換えない
+    enabled: true
+    food_pop: 1.0                 # 美味しそう加工の強さ（0 で無し）
+    bokeh: true                   # 弁当箱の外をレンズのボケでぼかす
+    bokeh_radius: 0.022           # ボケの大きさ（短辺に対する比）
+    vignette: 0.22                # 周辺減光
+    grain: 0.012                  # 粒子感
   color:                        # 1枚目の色補正（料理の形は変えない）
     enabled: true
     white_balance: 0.5          # 色かぶりを戻す強さ（0〜1）

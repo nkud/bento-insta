@@ -6,3 +6,5 @@ pillow-heif>=0.20
 pyyaml>=6
 requests>=2.32
 numpy>=1.26
+rembg[cpu]
+opencv-python-headless

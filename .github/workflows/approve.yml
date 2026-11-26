@@ -38,6 +38,11 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: 切り抜き用モデルのキャッシュ
+        uses: actions/cache@v4
+        with:
+          path: ~/.rembg
+          key: rembg-isnet-general-use
       - name: Claude Code CLI（サブスク枠で Claude を使う）
         run: npm install -g @anthropic-ai/claude-code
 
