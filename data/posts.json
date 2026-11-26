@@ -333,10 +333,22 @@
       "reach": null,
       "views": null,
       "total_interactions": null,
-      "age_hours": 2.3,
-      "collected_at": "2026-11-25T12:02:12.828181+09:00"
+      "age_hours": 25.4,
+      "collected_at": "2026-11-26T11:03:50.186300+09:00"
     },
-    "snapshots": {}
+    "snapshots": {
+      "24": {
+        "likes": 0,
+        "comments": 0,
+        "saved": null,
+        "shares": null,
+        "reach": null,
+        "views": null,
+        "total_interactions": null,
+        "age_hours": 25.4,
+        "collected_at": "2026-11-26T11:03:50.186300+09:00"
+      }
+    }
   },
   {
     "drive_file_id": "17RLvjIaw16XDOPAYrRrlnE89gUV_dmyi",
@@ -665,10 +677,22 @@
       "reach": null,
       "views": null,
       "total_interactions": null,
-      "age_hours": 22.3,
-      "collected_at": "2026-11-25T12:02:12.828181+09:00"
+      "age_hours": 45.3,
+      "collected_at": "2026-11-26T11:03:50.186300+09:00"
     },
-    "snapshots": {}
+    "snapshots": {
+      "24": {
+        "likes": 0,
+        "comments": 0,
+        "saved": null,
+        "shares": null,
+        "reach": null,
+        "views": null,
+        "total_interactions": null,
+        "age_hours": 45.3,
+        "collected_at": "2026-11-26T11:03:50.186300+09:00"
+      }
+    }
   },
   {
     "drive_file_id": "1-xGaolcqA9Klf1sAlgMRLOBjedn5Eia3",
