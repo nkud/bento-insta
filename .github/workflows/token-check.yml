@@ -1,0 +1,21 @@
+name: トークンの種類と権限を確認
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: debug_token
+        env:
+          T: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os, json, urllib.request, datetime
+          t = os.environ["T"]
+          u = f"https://graph.facebook.com/v26.0/debug_token?input_token={t}&access_token={t}"
+          d = json.load(urllib.request.urlopen(u))["data"]
+          exp = d.get("expires_at")
+          print("type:", d.get("type"), "| app:", d.get("application"), "| valid:", d.get("is_valid"))
+          print("expires:", "なし" if not exp else datetime.datetime.fromtimestamp(exp).isoformat())
+          print("scopes:", ", ".join(d.get("scopes", [])))
+          print("user_id:", d.get("user_id"), "| profile_id:", d.get("profile_id"))
+          PY
