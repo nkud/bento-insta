@@ -1,102 +1,14 @@
 {
-  "updated_at": "2026-11-26T11:03:55.996032+09:00",
-  "n_posts": 1,
+  "updated_at": "2026-11-26T11:11:01.110378+09:00",
+  "n_posts": 0,
   "learning_active": false,
   "arms": {
-    "title_style": {
-      "plain": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "pen": {
-      "marker": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "caption_length": {
-      "long": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "hashtag_count": {
-      "15": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    }
+    "title_style": {},
+    "pen": {},
+    "caption_length": {},
+    "hashtag_count": {}
   },
-  "groups": {
-    "title_style": {
-      "plain": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "pen": {
-      "marker": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "caption_length": {
-      "long": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "hashtag_count": {
-      "15": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "main": {
-      "egg": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "tone": {
-      "other": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "dish_count": {
-      "6品以上": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "weekday": {
-      "土": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    },
-    "hour": {
-      "夕方 14-17時": {
-        "n": 1,
-        "mean": 0.0,
-        "likes_mean": 0.0
-      }
-    }
-  },
+  "groups": {},
   "hashtags": [],
   "insights": null
 }

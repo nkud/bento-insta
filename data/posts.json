@@ -110,7 +110,8 @@
       "age_hours": 17.8,
       "collected_at": "2026-11-22T08:48:13.506228+09:00"
     },
-    "snapshots": {}
+    "snapshots": {},
+    "ig_missing": true
   },
   {
     "drive_file_id": "1wYcuUJGblFjgyPnXUhjVkFz6Ai-MlIjF",
@@ -333,8 +334,8 @@
       "reach": null,
       "views": null,
       "total_interactions": null,
-      "age_hours": 25.4,
-      "collected_at": "2026-11-26T11:03:50.186300+09:00"
+      "age_hours": 25.5,
+      "collected_at": "2026-11-26T11:10:53.559413+09:00"
     },
     "snapshots": {
       "24": {
@@ -677,8 +678,8 @@
       "reach": null,
       "views": null,
       "total_interactions": null,
-      "age_hours": 45.3,
-      "collected_at": "2026-11-26T11:03:50.186300+09:00"
+      "age_hours": 45.4,
+      "collected_at": "2026-11-26T11:10:53.559413+09:00"
     },
     "snapshots": {
       "24": {
