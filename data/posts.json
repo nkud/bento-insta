@@ -334,8 +334,8 @@
       "reach": 1,
       "views": 4,
       "total_interactions": 0,
-      "age_hours": 28.8,
-      "collected_at": "2026-11-26T14:26:39.161361+09:00"
+      "age_hours": 49.5,
+      "collected_at": "2026-11-27T11:09:51.614439+09:00"
     },
     "snapshots": {
       "24": {
@@ -566,7 +566,19 @@
       "#いり卵",
       "#にんじんラペ"
     ],
-    "followers_at_post": 1
+    "followers_at_post": 1,
+    "metrics": {
+      "likes": 0,
+      "comments": 0,
+      "saved": 0,
+      "shares": 0,
+      "reach": 0,
+      "views": 0,
+      "total_interactions": 0,
+      "age_hours": 20.7,
+      "collected_at": "2026-11-27T11:09:51.614439+09:00"
+    },
+    "snapshots": {}
   },
   {
     "drive_file_id": "1miL13_3h_IfEtgnzhxORjOldlnfVIxtF",
@@ -690,8 +702,8 @@
       "reach": 1,
       "views": 4,
       "total_interactions": 0,
-      "age_hours": 48.7,
-      "collected_at": "2026-11-26T14:26:39.161361+09:00"
+      "age_hours": 69.4,
+      "collected_at": "2026-11-27T11:09:51.614439+09:00"
     },
     "snapshots": {
       "24": {
