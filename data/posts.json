@@ -448,8 +448,20 @@
     ],
     "error": null,
     "issue_number": 4,
-    "status": "scheduled",
-    "scheduled_at": "2026-11-27T17:00:00+09:00"
+    "status": "posted",
+    "scheduled_at": null,
+    "ig_media_id": "17945823756392966",
+    "permalink": "https://www.instagram.com/p/DgP8_4ml0TI/",
+    "posted_at": "2026-11-28T00:01:09.053228+09:00",
+    "caption_edited": false,
+    "hashtags": [
+      "#在宅だんな弁当",
+      "#わっぱ弁当",
+      "#豚の生姜焼き",
+      "#卵焼き",
+      "#さつまいも煮"
+    ],
+    "followers_at_post": 1
   },
   {
     "drive_file_id": "16_U-yMqAqWTtqvvYDBnHNWYHVkbBNIRy",
