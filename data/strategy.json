@@ -1,14 +1,147 @@
 {
-  "updated_at": "2026-11-27T11:09:58.009457+09:00",
-  "n_posts": 0,
+  "updated_at": "2026-11-28T10:57:28.165528+09:00",
+  "n_posts": 2,
   "learning_active": false,
   "arms": {
-    "title_style": {},
-    "pen": {},
-    "caption_length": {},
-    "hashtag_count": {}
+    "title_style": {
+      "plain": {
+        "n": 2,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "pen": {
+      "marker": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "thin": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "caption_length": {
+      "long": {
+        "n": 2,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "hashtag_count": {
+      "3": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "5": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    }
   },
-  "groups": {},
+  "groups": {
+    "title_style": {
+      "plain": {
+        "n": 2,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "pen": {
+      "marker": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "thin": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "caption_length": {
+      "long": {
+        "n": 2,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "hashtag_count": {
+      "3": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "5": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "main": {
+      "meat": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "egg": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "tone": {
+      "brown": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "other": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "dish_count": {
+      "4〜5品": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "6品以上": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "weekday": {
+      "水": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "火": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    },
+    "hour": {
+      "朝 5-9時": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      },
+      "昼 10-13時": {
+        "n": 1,
+        "mean": 0.0,
+        "likes_mean": 0.0
+      }
+    }
+  },
   "hashtags": [],
   "insights": null
 }
